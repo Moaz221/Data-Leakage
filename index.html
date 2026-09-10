@@ -9,7 +9,7 @@
   <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <meta name="keywords" content="data leakage, machine learning, target leakage, preprocessing leakage, temporal leakage, cross-validation leakage, scikit-learn, MLOps">
   <meta name="google-site-verification" content="QWFcUuDBTm88TxwOWOK3VFgARKdI1HqCGiPqv0dV_64">
-  <meta name="theme-color" content="#01301E">
+  <meta name="theme-color" content="#050505">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Data Leakage in Machine Learning: How to Detect and Prevent It">
@@ -33,7 +33,11 @@
     "url": "https://moaz221.github.io/Data-Leakage/",
     "author": {
       "@type": "Person",
-      "name": "Moaz Ragab Kamel"
+      "name": "Moaz Ragab Kamel",
+      "url": "https://portfolio-neon-phi-85.vercel.app/",
+      "sameAs": [
+        "https://portfolio-neon-phi-85.vercel.app/"
+      ]
     },
     "inLanguage": "en",
     "keywords": [
@@ -57,22 +61,22 @@
 
   <style>
     :root {
-      --beige: #EBE2D6;
-      --beige-dark: #d9cfc2;
-      --beige-darker: #c4b89f;
-      --beige-soft: rgba(235, 226, 214, 0.08);
-      --beige-mid: rgba(235, 226, 214, 0.15);
+      --beige: #f1cf72;
+      --beige-dark: #d7ad45;
+      --beige-darker: #a9822f;
+      --beige-soft: rgba(215, 173, 69, 0.10);
+      --beige-mid: rgba(215, 173, 69, 0.18);
 
-      --green: #01301E;
-      --green-light: #024a2e;
-      --green-lighter: #05643d;
-      --green-pale: #0a7a4a;
-      --green-soft: rgba(1, 48, 30, 0.6);
+      --green: #050505;
+      --green-light: #11100d;
+      --green-lighter: #211d13;
+      --green-pale: #d7ad45;
+      --green-soft: rgba(5, 5, 5, 0.75);
 
-      --white: #f5f0e8;
-      --text: #EBE2D6;
-      --muted: rgba(235, 226, 214, 0.6);
-      --muted-dark: rgba(235, 226, 214, 0.35);
+      --white: #f6f1e5;
+      --text: #e9e2d2;
+      --muted: rgba(233, 226, 210, 0.68);
+      --muted-dark: rgba(233, 226, 210, 0.4);
 
       --danger: #c0392b;
       --danger-light: #e74c3c;
@@ -81,8 +85,8 @@
       --success: #27ae60;
       --success-soft: rgba(39, 174, 96, 0.15);
 
-      --line: rgba(235, 226, 214, 0.12);
-      --line-strong: rgba(235, 226, 214, 0.22);
+      --line: rgba(215, 173, 69, 0.22);
+      --line-strong: rgba(215, 173, 69, 0.42);
 
       --display: 'Playfair Display', serif;
       --body: 'DM Sans', sans-serif;
@@ -116,10 +120,8 @@
       content: "";
       position: fixed;
       inset: 0;
-      z-index: -2;
+      z-index: -1;
       background:
-        radial-gradient(ellipse 80% 60% at 0% 0%, rgba(235,226,214,0.04) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 80% at 100% 100%, rgba(235,226,214,0.03) 0%, transparent 55%),
         var(--green);
       pointer-events: none;
     }
@@ -130,17 +132,87 @@
       inset: 0;
       z-index: -1;
       pointer-events: none;
-      opacity: 0.025;
-      background-image:
-        linear-gradient(var(--beige) 1px, transparent 1px),
-        linear-gradient(90deg, var(--beige) 1px, transparent 1px);
-      background-size: 64px 64px;
+      opacity: 0;
+    }
+
+    #bg-canvas,
+    .background-veil {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    #bg-canvas { z-index: 0; }
+
+    .background-veil {
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(215, 173, 69, 0.06) 0%, transparent 45%),
+        radial-gradient(ellipse at 100% 100%, rgba(215, 173, 69, 0.05) 0%, transparent 50%);
+    }
+
+    body > nav,
+    body > main,
+    body > footer {
+      position: relative;
+      z-index: 1;
     }
 
     ::selection { background: var(--beige); color: var(--green); }
 
     a { color: inherit; }
     button { font-family: inherit; }
+
+    /* Custom cursor */
+    @media (hover: hover) and (pointer: fine) {
+      * { cursor: none !important; }
+
+      #cursor-dot,
+      #cursor-ring {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+      }
+
+      #cursor-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--beige);
+        box-shadow: 0 0 12px rgba(241, 207, 114, 0.85);
+      }
+
+      #cursor-ring {
+        width: 34px;
+        height: 34px;
+        border: 1px solid rgba(241, 207, 114, 0.8);
+        border-radius: 50%;
+        transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      }
+
+      #cursor-ring.hover {
+        width: 54px;
+        height: 54px;
+        border-color: var(--beige);
+        background: rgba(215, 173, 69, 0.08);
+      }
+
+      .leak-particle {
+        position: fixed;
+        width: 2px;
+        height: 2px;
+        border-radius: 50%;
+        background: var(--beige);
+        box-shadow: 0 0 5px rgba(241, 207, 114, 0.7);
+        pointer-events: none;
+        z-index: 9998;
+      }
+    }
 
     .container {
       width: min(1160px, calc(100% - 48px));
@@ -153,8 +225,8 @@
     /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: var(--green-light); }
-    ::-webkit-scrollbar-thumb { background: rgba(235,226,214,0.3); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(235,226,214,0.5); }
+    ::-webkit-scrollbar-thumb { background: rgba(215,173,69,0.45); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(241,207,114,0.75); }
 
     /* ── NAVIGATION ── */
     nav {
@@ -162,7 +234,7 @@
       top: 0;
       z-index: 100;
       border-bottom: 1px solid var(--line-strong);
-      background: rgba(1, 30, 18, 0.92);
+      background: rgba(5, 5, 5, 0.92);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
     }
@@ -852,7 +924,7 @@
     pre {
       overflow-x: auto;
       padding: 26px;
-      color: #c8c0b0;
+      color: #f0e5c5;
       direction: ltr;
       text-align: left;
       font-family: var(--mono);
@@ -860,6 +932,15 @@
       line-height: 1.8;
       white-space: pre;
     }
+
+    .code-token-comment { color: #7f8c72; font-style: italic; }
+    .code-token-string { color: #d9a85f; }
+    .code-token-keyword { color: #e7b84b; font-weight: 600; }
+    .code-token-builtin { color: #d8c27a; }
+    .code-token-class { color: #f1cf72; }
+    .code-token-number { color: #c995d9; }
+    .code-token-operator { color: #d7ad45; }
+    .code-token-function { color: #e8d28b; }
 
     .code-note {
       padding: 12px 20px;
@@ -1411,6 +1492,68 @@
       animation: fadeUp 0.6s ease forwards;
     }
 
+    /* Black and gold visual polish */
+    body {
+      background: #050505;
+    }
+
+    .hero {
+      animation: heroReveal 0.9s ease both;
+    }
+
+    .hero h1 {
+      text-shadow: 0 0 34px rgba(215, 173, 69, 0.12);
+    }
+
+    .demo,
+    .learning-card,
+    .audit-card,
+    .quiz,
+    .next-card,
+    .code-panel {
+      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(215, 173, 69, 0.04);
+    }
+
+    .demo:hover,
+    .audit-card:hover,
+    .quiz:hover,
+    .next-card:hover {
+      border-color: rgba(241, 207, 114, 0.55);
+      box-shadow: var(--shadow-lg), 0 0 28px rgba(215, 173, 69, 0.1);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .tag:hover,
+    .nav-links a:hover,
+    .run-button:hover,
+    .quiz-button:hover {
+      box-shadow: 0 0 18px rgba(215, 173, 69, 0.18);
+    }
+
+    @keyframes heroReveal {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes goldGlow {
+      0%, 100% { box-shadow: 0 0 0 rgba(215, 173, 69, 0); }
+      50% { box-shadow: 0 0 22px rgba(215, 173, 69, 0.2); }
+    }
+
+    .brand-mark::before,
+    .mode-toggle button.active {
+      animation: goldGlow 2.8s ease-in-out infinite;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
     @media (max-width: 600px) {
       .container { width: min(100% - 32px, 1160px); }
       .hero { padding-top: 72px; }
@@ -1423,6 +1566,11 @@
 </head>
 
 <body>
+
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div class="background-veil" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+  <div id="cursor-dot" aria-hidden="true"></div>
 
   <noscript>
     <p class="container">This interactive guide explains how to detect and prevent data leakage in machine learning, including target, preprocessing, temporal, group, identifier, and cross-validation leakage.</p>
@@ -1475,7 +1623,7 @@
 
       <div class="hero-meta">
         <span>Author:</span>
-        <strong>Moaz Ragab Kamel</strong>
+        <strong><a href="https://portfolio-neon-phi-85.vercel.app/" target="_blank" rel="author noopener noreferrer">Moaz Ragab Kamel</a></strong>
       </div>
 
       <div class="tags">
@@ -2186,7 +2334,8 @@ print("Group-aware std:", group_scores.std())</code></pre>
 
       <div class="cta">
         If this article helped you, share your experience in the comments or connect with
-        <strong>Moaz Ragab Kamel</strong> on LinkedIn. Questions and feedback are always welcome.
+        <strong><a href="https://portfolio-neon-phi-85.vercel.app/" target="_blank" rel="author noopener noreferrer">Moaz Ragab Kamel</a></strong>.
+        Questions and feedback are always welcome.
       </div>
     </section>
 
@@ -2240,7 +2389,7 @@ print("Group-aware std:", group_scores.std())</code></pre>
   <footer>
     <div class="container footer-inner">
       <p>Data Leakage in Machine Learning · Interactive Edition</p>
-      <p>Prepared by Moaz Ragab Kamel</p>
+      <p>Prepared by <a href="https://portfolio-neon-phi-85.vercel.app/" target="_blank" rel="author noopener noreferrer">Moaz Ragab Kamel</a></p>
     </div>
   </footer>
 
@@ -2334,6 +2483,106 @@ print("Group-aware std:", group_scores.std())</code></pre>
 
     restartParticles();
 
+    /* ── PYTHON SYNTAX HIGHLIGHTING ── */
+    const pythonKeywords = new Set([
+      "and", "as", "assert", "async", "await", "break", "case", "class",
+      "continue", "def", "del", "elif", "else", "except", "finally", "for",
+      "from", "global", "if", "import", "in", "is", "lambda", "match",
+      "nonlocal", "not", "or", "pass", "raise", "return", "try", "while",
+      "with", "yield", "True", "False", "None"
+    ]);
+    const pythonBuiltins = new Set([
+      "print", "len", "range", "int", "float", "str", "list", "dict", "set",
+      "tuple", "min", "max", "sum", "enumerate", "zip", "abs", "round"
+    ]);
+
+    function escapeCode(value) {
+      return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function codeToken(value, type) {
+      return `<span class="code-token-${type}">${escapeCode(value)}</span>`;
+    }
+
+    function highlightPython(source) {
+      let html = "";
+      let index = 0;
+      let previousWord = "";
+
+      while (index < source.length) {
+        const current = source[index];
+
+        if (current === "#") {
+          const end = source.indexOf("\n", index);
+          const commentEnd = end === -1 ? source.length : end;
+          html += codeToken(source.slice(index, commentEnd), "comment");
+          index = commentEnd;
+          continue;
+        }
+
+        if (current === "'" || current === '"') {
+          const quote = current;
+          const triple = source.slice(index, index + 3) === quote.repeat(3);
+          const delimiter = triple ? quote.repeat(3) : quote;
+          let end = index + delimiter.length;
+          while (end < source.length) {
+            if (source[end] === "\\" && !triple) {
+              end += 2;
+              continue;
+            }
+            if (source.slice(end, end + delimiter.length) === delimiter) {
+              end += delimiter.length;
+              break;
+            }
+            end++;
+          }
+          html += codeToken(source.slice(index, end), "string");
+          index = end;
+          continue;
+        }
+
+        const number = source.slice(index).match(/^(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?/);
+        if (number) {
+          html += codeToken(number[0], "number");
+          index += number[0].length;
+          continue;
+        }
+
+        const word = source.slice(index).match(/^[A-Za-z_][A-Za-z0-9_]*/);
+        if (word) {
+          const value = word[0];
+          const rest = source.slice(index + value.length);
+          const nextNonSpace = rest.match(/^\s*(.)/);
+          let type = "";
+          if (pythonKeywords.has(value)) type = "keyword";
+          else if (pythonBuiltins.has(value)) type = "builtin";
+          else if (previousWord === "class") type = "class";
+          else if (nextNonSpace && nextNonSpace[1] === "(") type = "function";
+          html += type ? codeToken(value, type) : escapeCode(value);
+          previousWord = value;
+          index += value.length;
+          continue;
+        }
+
+        if ("=+-*/%<>!&|^~:".includes(current)) {
+          const operator = source.slice(index).match(/^(?:==|!=|<=|>=|->|\+=|-=|\*=|\/=|\/\/|\*\*|<<|>>|[=+\-*/%<>!&|^~:])/)[0];
+          html += codeToken(operator, "operator");
+          index += operator.length;
+          continue;
+        }
+
+        html += escapeCode(current);
+        if (!/\s/.test(current)) previousWord = "";
+        index++;
+      }
+
+      return html;
+    }
+
+    document.querySelectorAll(".code-panel pre code").forEach(code => {
+      code.innerHTML = highlightPython(code.textContent);
+    });
+
     /* ── CODE TABS ── */
     document.querySelectorAll(".code-tab").forEach(tab => {
       tab.addEventListener("click", () => {
@@ -2396,6 +2645,59 @@ print("Group-aware std:", group_scores.std())</code></pre>
     const auditInputs   = document.querySelectorAll(".audit-item input");
     const auditProgress = document.getElementById("audit-progress");
 
+    const cursorDot = document.getElementById("cursor-dot");
+    const cursorRing = document.getElementById("cursor-ring");
+    let cursorX = 0;
+    let cursorY = 0;
+    let ringX = 0;
+    let ringY = 0;
+
+    if (cursorDot && cursorRing) {
+      document.addEventListener("mousemove", event => {
+        cursorX = event.clientX;
+        cursorY = event.clientY;
+        cursorDot.style.left = `${cursorX}px`;
+        cursorDot.style.top = `${cursorY}px`;
+
+        if (Math.random() < 0.32) {
+          const particle = document.createElement("span");
+          particle.className = "leak-particle";
+          particle.style.left = `${cursorX + (Math.random() * 8 - 4)}px`;
+          particle.style.top = `${cursorY + (Math.random() * 8 - 4)}px`;
+          document.body.appendChild(particle);
+
+          const duration = 550 + Math.random() * 350;
+          particle.animate(
+            [
+              { transform: "translate(0, 0) scale(1)", opacity: 0.9 },
+              {
+                transform: `translate(${Math.random() * 18 - 9}px, ${18 + Math.random() * 28}px) scale(0.35)`,
+                opacity: 0
+              }
+            ],
+            { duration, easing: "ease-out" }
+          );
+
+          setTimeout(() => particle.remove(), duration);
+        }
+      });
+
+      function animateCursor() {
+        ringX += (cursorX - ringX) * 0.18;
+        ringY += (cursorY - ringY) * 0.18;
+        cursorRing.style.left = `${ringX}px`;
+        cursorRing.style.top = `${ringY}px`;
+        requestAnimationFrame(animateCursor);
+      }
+
+      animateCursor();
+
+      document.querySelectorAll("a, button, input, .learning-card, .concept-card, .pattern-card, .next-card").forEach(element => {
+        element.addEventListener("mouseenter", () => cursorRing.classList.add("hover"));
+        element.addEventListener("mouseleave", () => cursorRing.classList.remove("hover"));
+      });
+    }
+
     function updateAudit() {
       const done = Array.from(auditInputs).filter(i => i.checked).length;
       auditProgress.textContent = `${done} / ${auditInputs.length} completed`;
@@ -2425,6 +2727,69 @@ print("Group-aware std:", group_scores.std())</code></pre>
         });
       });
     });
+
+    /* ── SUBTLE LEAKAGE BACKGROUND ── */
+    const backgroundCanvas = document.getElementById("bg-canvas");
+    const backgroundContext = backgroundCanvas && backgroundCanvas.getContext("2d");
+    let backgroundWidth = 0;
+    let backgroundHeight = 0;
+    let backgroundDpr = 1;
+    let leakageSources = [];
+
+    function resizeLeakageBackground() {
+      if (!backgroundCanvas || !backgroundContext) return;
+      backgroundDpr = Math.min(window.devicePixelRatio || 1, 2);
+      backgroundWidth = window.innerWidth;
+      backgroundHeight = window.innerHeight;
+      backgroundCanvas.width = backgroundWidth * backgroundDpr;
+      backgroundCanvas.height = backgroundHeight * backgroundDpr;
+      backgroundCanvas.style.width = `${backgroundWidth}px`;
+      backgroundCanvas.style.height = `${backgroundHeight}px`;
+      backgroundContext.setTransform(backgroundDpr, 0, 0, backgroundDpr, 0, 0);
+
+      const count = Math.max(3, Math.round((backgroundWidth * backgroundHeight) / 260000));
+      leakageSources = Array.from({ length: count }, () => ({
+        x: Math.random() * backgroundWidth,
+        y: Math.random() * backgroundHeight,
+        phase: Math.random(),
+        speed: 0.0018 + Math.random() * 0.0012,
+        maxRadius: 140 + Math.random() * 120
+      }));
+    }
+
+    let backgroundTime = 0;
+    function animateLeakageBackground() {
+      if (backgroundCanvas && backgroundContext) {
+        backgroundTime++;
+        backgroundContext.clearRect(0, 0, backgroundWidth, backgroundHeight);
+
+        leakageSources.forEach(source => {
+          for (let ring = 0; ring < 3; ring++) {
+            const phase = (backgroundTime * source.speed + source.phase + ring / 3) % 1;
+            const radius = phase * source.maxRadius;
+            const alpha = (1 - phase) * 0.10;
+            if (alpha <= 0) continue;
+
+            backgroundContext.beginPath();
+            backgroundContext.arc(source.x, source.y, radius, 0, Math.PI * 2);
+            backgroundContext.strokeStyle = `rgba(215, 173, 69, ${alpha})`;
+            backgroundContext.lineWidth = 1;
+            backgroundContext.stroke();
+          }
+
+          backgroundContext.beginPath();
+          backgroundContext.arc(source.x, source.y, 1.5, 0, Math.PI * 2);
+          backgroundContext.fillStyle = "rgba(215, 173, 69, 0.24)";
+          backgroundContext.fill();
+        });
+      }
+
+      requestAnimationFrame(animateLeakageBackground);
+    }
+
+    window.addEventListener("resize", resizeLeakageBackground);
+    resizeLeakageBackground();
+    animateLeakageBackground();
   </script>
 
 </body>
