@@ -3,122 +3,172 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta name="description" content="An interactive guide to detecting and preventing data leakage in machine learning.">
+  <meta name="description" content="An interactive guide to detecting and preventing data leakage in machine learning. Learn about target, preprocessing, temporal, group, identifier, and cross-validation leakage with Python and scikit-learn examples.">
   <meta name="author" content="Moaz Ragab Kamel">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="keywords" content="data leakage, machine learning, target leakage, preprocessing leakage, temporal leakage, cross-validation leakage, scikit-learn, MLOps">
+  <meta name="google-site-verification" content="QWFcUuDBTm88TxwOWOK3VFgARKdI1HqCGiPqv0dV_64">
+  <meta name="theme-color" content="#01301E">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Data Leakage in Machine Learning: How to Detect and Prevent It">
+  <meta property="og:description" content="Understand why highly accurate machine learning models can fail in production, and learn practical ways to detect and prevent data leakage.">
+  <meta property="og:site_name" content="Data Leakage in Machine Learning">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://moaz221.github.io/Data-Leakage/">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Data Leakage in Machine Learning: How to Detect and Prevent It">
+  <meta name="twitter:description" content="An interactive guide to detecting and preventing data leakage with Python and scikit-learn.">
+
+  <link rel="canonical" href="https://moaz221.github.io/Data-Leakage/">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Data Leakage in Machine Learning: How to Detect and Prevent It",
+    "description": "An interactive guide to detecting and preventing data leakage in machine learning, including target, preprocessing, temporal, group, identifier, and cross-validation leakage.",
+    "url": "https://moaz221.github.io/Data-Leakage/",
+    "author": {
+      "@type": "Person",
+      "name": "Moaz Ragab Kamel"
+    },
+    "inLanguage": "en",
+    "keywords": [
+      "data leakage",
+      "machine learning",
+      "scikit-learn",
+      "MLOps"
+    ],
+    "about": {
+      "@type": "Thing",
+      "name": "Data leakage in machine learning"
+    }
+  }
+  </script>
 
   <title>Data Leakage in Machine Learning — Interactive Guide</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --black: #050505;
-      --black-soft: #0a0a09;
-      --panel: #11100d;
-      --panel-light: #181611;
-      --panel-lighter: #211d13;
+      --beige: #EBE2D6;
+      --beige-dark: #d9cfc2;
+      --beige-darker: #c4b89f;
+      --beige-soft: rgba(235, 226, 214, 0.08);
+      --beige-mid: rgba(235, 226, 214, 0.15);
 
-      --gold: #d7ad45;
-      --gold-light: #f1cf72;
-      --gold-dark: #806323;
-      --gold-soft: rgba(215, 173, 69, 0.13);
+      --green: #01301E;
+      --green-light: #024a2e;
+      --green-lighter: #05643d;
+      --green-pale: #0a7a4a;
+      --green-soft: rgba(1, 48, 30, 0.6);
 
-      --white: #f6f1e5;
-      --text: #e9e2d2;
-      --muted: #a69c88;
-      --muted-dark: #706957;
+      --white: #f5f0e8;
+      --text: #EBE2D6;
+      --muted: rgba(235, 226, 214, 0.6);
+      --muted-dark: rgba(235, 226, 214, 0.35);
 
-      --danger: #d7654c;
-      --danger-soft: rgba(150, 55, 39, 0.22);
+      --danger: #c0392b;
+      --danger-light: #e74c3c;
+      --danger-soft: rgba(192, 57, 43, 0.18);
 
-      --success: #9dbb6a;
-      --success-soft: rgba(114, 143, 61, 0.2);
+      --success: #27ae60;
+      --success-soft: rgba(39, 174, 96, 0.15);
 
-      --line: rgba(215, 173, 69, 0.22);
+      --line: rgba(235, 226, 214, 0.12);
+      --line-strong: rgba(235, 226, 214, 0.22);
 
-      --display: "Space Grotesk", sans-serif;
-      --body: "DM Sans", sans-serif;
-      --mono: "JetBrains Mono", monospace;
+      --display: 'Playfair Display', serif;
+      --body: 'DM Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+
+      --shadow-sm: 0 2px 12px rgba(0,0,0,0.15);
+      --shadow-md: 0 8px 32px rgba(0,0,0,0.25);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,0.35);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       min-height: 100vh;
       overflow-x: hidden;
-      background:
-        radial-gradient(circle at 10% 0%, rgba(215, 173, 69, 0.08), transparent 28rem),
-        radial-gradient(circle at 95% 15%, rgba(215, 173, 69, 0.05), transparent 25rem),
-        var(--black);
+      background: var(--green);
       color: var(--text);
       font-family: var(--body);
-      line-height: 1.65;
+      font-size: 16px;
+      line-height: 1.7;
     }
 
     body::before {
       content: "";
       position: fixed;
       inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(ellipse 80% 60% at 0% 0%, rgba(235,226,214,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 100% 100%, rgba(235,226,214,0.03) 0%, transparent 55%),
+        var(--green);
+      pointer-events: none;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
       z-index: -1;
       pointer-events: none;
-      opacity: 0.045;
+      opacity: 0.025;
       background-image:
-        linear-gradient(var(--gold) 1px, transparent 1px),
-        linear-gradient(90deg, var(--gold) 1px, transparent 1px);
-      background-size: 72px 72px;
+        linear-gradient(var(--beige) 1px, transparent 1px),
+        linear-gradient(90deg, var(--beige) 1px, transparent 1px);
+      background-size: 64px 64px;
     }
 
-    ::selection {
-      background: var(--gold);
-      color: var(--black);
-    }
+    ::selection { background: var(--beige); color: var(--green); }
 
-    a {
-      color: inherit;
-    }
-
-    button {
-      font-family: inherit;
-    }
-
-    .mono {
-      font-family: var(--mono);
-    }
+    a { color: inherit; }
+    button { font-family: inherit; }
 
     .container {
-      width: min(1160px, calc(100% - 42px));
+      width: min(1160px, calc(100% - 48px));
       margin: auto;
     }
 
-    .gold-text {
-      color: var(--gold-light);
-    }
+    .beige-text { color: var(--beige); }
+    .green-text { color: var(--green-pale); }
 
-    /* Navigation */
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--green-light); }
+    ::-webkit-scrollbar-thumb { background: rgba(235,226,214,0.3); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(235,226,214,0.5); }
 
+    /* ── NAVIGATION ── */
     nav {
       position: sticky;
       top: 0;
       z-index: 100;
-      border-bottom: 1px solid var(--line);
-      background: rgba(5, 5, 5, 0.9);
-      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line-strong);
+      background: rgba(1, 30, 18, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
 
     .nav-inner {
-      min-height: 68px;
+      min-height: 70px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -128,173 +178,195 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
-      color: var(--white);
+      gap: 12px;
+      color: var(--beige);
       font-family: var(--mono);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
       white-space: nowrap;
     }
 
     .brand-mark {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 18px rgba(215, 173, 69, 0.8);
-      animation: pulse 2.4s ease-in-out infinite;
+      position: relative;
+      width: 10px;
+      height: 10px;
     }
 
-    @keyframes pulse {
-      0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-      }
+    .brand-mark::before,
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+    }
 
-      50% {
-        opacity: 0.45;
-        transform: scale(0.78);
-      }
+    .brand-mark::before {
+      background: var(--beige);
+      animation: pulseCore 2.4s ease-in-out infinite;
+    }
+
+    .brand-mark::after {
+      background: rgba(235, 226, 214, 0.3);
+      animation: pulseRing 2.4s ease-in-out infinite;
+      transform: scale(2.2);
+    }
+
+    @keyframes pulseCore {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.75); }
+    }
+
+    @keyframes pulseRing {
+      0%, 100% { opacity: 0.4; transform: scale(2.2); }
+      50% { opacity: 0; transform: scale(3); }
+    }
+
+    .nav-divider {
+      width: 1px;
+      height: 16px;
+      background: var(--line-strong);
     }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 23px;
-      color: var(--muted);
-      font-size: 13px;
+      gap: 6px;
     }
 
     .nav-links a {
+      padding: 7px 13px;
+      border-radius: var(--radius-sm);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
       text-decoration: none;
-      transition: color 0.2s ease;
+      transition: all 0.2s ease;
+      letter-spacing: 0.01em;
     }
 
     .nav-links a:hover {
-      color: var(--gold-light);
+      background: var(--beige-soft);
+      color: var(--beige);
     }
 
-    @media (max-width: 820px) {
-      .nav-links {
-        display: none;
-      }
-    }
+    @media (max-width: 860px) { .nav-links { display: none; } }
 
-    /* Hero */
-
+    /* ── HERO ── */
     .hero {
-      padding: 92px 0 60px;
+      padding: 100px 0 72px;
     }
 
     .eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 11px;
-      margin-bottom: 20px;
-      color: var(--gold);
+      gap: 12px;
+      margin-bottom: 28px;
+      color: var(--beige-darker);
       font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.12em;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
-    .eyebrow::before {
-      content: "";
-      display: inline-block;
-      width: 30px;
+    .eyebrow-line {
+      width: 36px;
       height: 1px;
-      background: var(--gold);
+      background: linear-gradient(90deg, var(--beige-darker), transparent);
     }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5 {
+    h1, h2, h3, h4 {
       font-family: var(--display);
-      color: var(--white);
-      line-height: 1.15;
+      color: var(--beige);
+      line-height: 1.12;
     }
 
     h1 {
-      max-width: 900px;
-      font-size: clamp(40px, 7vw, 78px);
-      letter-spacing: -0.055em;
+      max-width: 920px;
+      font-size: clamp(38px, 6.5vw, 74px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--beige-darker);
     }
 
     .hero-subtitle {
-      max-width: 760px;
-      margin-top: 22px;
-      color: var(--gold-light);
-      font-family: var(--display);
-      font-size: clamp(21px, 3vw, 34px);
-      font-weight: 600;
-      letter-spacing: -0.025em;
+      max-width: 720px;
+      margin-top: 24px;
+      color: var(--beige-darker);
+      font-family: var(--body);
+      font-size: clamp(17px, 2.2vw, 22px);
+      font-weight: 300;
+      letter-spacing: 0.01em;
+      line-height: 1.5;
     }
 
     .hero-description {
-      max-width: 750px;
-      margin-top: 24px;
+      max-width: 700px;
+      margin-top: 20px;
       color: var(--muted);
-      font-size: 17px;
+      font-size: 16px;
+      line-height: 1.75;
     }
 
     .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 22px;
-      margin-top: 27px;
-      color: var(--muted-dark);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 32px;
+      padding: 10px 18px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-sm);
+      background: var(--beige-soft);
+      color: var(--muted);
       font-family: var(--mono);
       font-size: 12px;
     }
 
     .hero-meta strong {
-      color: var(--muted);
-      font-weight: 500;
+      color: var(--beige);
+      font-weight: 600;
     }
 
     .tags {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 19px;
+      margin-top: 20px;
     }
 
     .tag {
-      padding: 5px 10px;
-      border: 1px solid var(--line);
+      padding: 5px 12px;
+      border: 1px solid var(--line-strong);
       border-radius: 999px;
-      background: var(--gold-soft);
-      color: var(--gold-light);
+      background: transparent;
+      color: var(--muted);
       font-family: var(--mono);
       font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      transition: all 0.2s ease;
     }
 
-    .mentorship {
-      max-width: 760px;
-      margin-top: 22px;
-      padding: 13px 16px;
-      border-left: 2px solid var(--gold);
-      background: linear-gradient(90deg, var(--gold-soft), transparent);
-      color: var(--muted);
-      font-size: 14px;
+    .tag:hover {
+      border-color: var(--beige-dark);
+      color: var(--beige);
+      background: var(--beige-soft);
     }
 
-    .mentorship strong {
-      color: var(--gold-light);
-    }
-
-    /* Pipeline Demo */
-
+    /* ── PIPELINE DEMO ── */
     .demo {
-      margin-top: 58px;
+      margin-top: 64px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-xl);
+      background: var(--green-light);
+      box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(235,226,214,0.06);
       overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: linear-gradient(145deg, var(--panel-light), var(--panel));
-      box-shadow: 0 25px 90px rgba(0, 0, 0, 0.3);
     }
 
     .demo-header {
@@ -302,44 +374,50 @@
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 14px;
-      padding: 20px 24px;
+      gap: 16px;
+      padding: 22px 28px;
       border-bottom: 1px solid var(--line);
+      background: rgba(235,226,214,0.03);
     }
 
     .demo-header h3 {
-      font-size: 17px;
+      font-family: var(--body);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--beige);
+      letter-spacing: 0.01em;
     }
 
     .mode-toggle {
       display: flex;
-      gap: 4px;
+      gap: 3px;
       padding: 4px;
-      border: 1px solid var(--line);
+      border: 1px solid var(--line-strong);
       border-radius: 999px;
-      background: var(--black-soft);
+      background: rgba(1, 30, 18, 0.5);
     }
 
     .mode-toggle button {
-      padding: 8px 15px;
+      padding: 8px 18px;
       border: 0;
       border-radius: 999px;
       background: transparent;
       color: var(--muted);
       cursor: pointer;
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
       transition: all 0.25s ease;
     }
 
     .mode-toggle button.active {
-      background: var(--gold);
-      color: var(--black);
-      font-weight: 700;
+      background: var(--beige);
+      color: var(--green);
     }
 
     .pipeline-stage {
-      padding: 34px 22px 20px;
+      padding: 36px 24px 24px;
     }
 
     #pipeline-svg {
@@ -348,55 +426,49 @@
       height: auto;
     }
 
-    .svg-node {
-      fill: var(--panel);
-      stroke: var(--gold-dark);
+    .svg-node-bg {
+      fill: var(--green);
+      stroke: rgba(235,226,214,0.2);
       stroke-width: 1.5;
     }
 
+    .svg-node-bg.active-node {
+      stroke: rgba(235,226,214,0.45);
+    }
+
     .svg-label {
-      fill: var(--white);
-      font-family: var(--mono);
-      font-size: 12px;
+      fill: var(--beige);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 600;
       text-anchor: middle;
     }
 
     .svg-subtitle {
-      fill: var(--muted);
-      font-family: var(--body);
-      font-size: 10px;
+      fill: rgba(235,226,214,0.5);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9.5px;
       text-anchor: middle;
     }
 
     .svg-flow {
       fill: none;
-      stroke: var(--gold-dark);
-      stroke-width: 2;
+      stroke: rgba(235,226,214,0.25);
+      stroke-width: 1.5;
     }
 
     .svg-leak {
       fill: none;
-      stroke: var(--danger);
+      stroke: var(--danger-light);
       stroke-width: 2;
-      stroke-dasharray: 7 7;
-      opacity: 1;
-      transition: opacity 0.3s ease;
+      stroke-dasharray: 6 5;
+      transition: opacity 0.35s ease;
     }
 
-    .svg-gate,
-    .svg-warning {
-      transition: opacity 0.3s ease;
-    }
+    .svg-gate, .svg-warning { transition: opacity 0.35s ease; }
 
-    .particle {
-      fill: var(--gold-light);
-      filter: drop-shadow(0 0 5px rgba(215, 173, 69, 0.7));
-    }
-
-    .particle.danger {
-      fill: var(--danger);
-      filter: drop-shadow(0 0 5px rgba(215, 101, 76, 0.65));
-    }
+    .particle { fill: var(--beige); filter: drop-shadow(0 0 4px rgba(235,226,214,0.6)); }
+    .particle.danger { fill: var(--danger-light); filter: drop-shadow(0 0 4px rgba(231,76,60,0.7)); }
 
     .demo-footer {
       display: flex;
@@ -404,314 +476,353 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 20px;
-      padding: 20px 24px 25px;
+      padding: 22px 28px 28px;
       border-top: 1px solid var(--line);
+      background: rgba(235,226,214,0.02);
     }
 
     .readout {
-      max-width: 760px;
+      max-width: 680px;
       color: var(--muted);
       font-size: 14px;
+      line-height: 1.65;
     }
 
-    .readout strong {
-      color: var(--gold-light);
-    }
+    .readout strong { color: var(--beige); }
 
     .score-pill {
-      min-width: 145px;
-      padding: 10px 17px;
-      border: 1px solid var(--gold-dark);
-      border-radius: 11px;
-      background: var(--gold-soft);
-      color: var(--gold-light);
+      min-width: 148px;
+      padding: 14px 20px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      background: var(--beige-soft);
+      color: var(--beige);
       font-family: var(--mono);
-      font-size: 22px;
+      font-size: 26px;
       font-weight: 700;
       text-align: center;
+      letter-spacing: -0.02em;
+      transition: all 0.3s ease;
     }
 
     .score-pill.danger {
-      border-color: rgba(215, 101, 76, 0.45);
+      border-color: rgba(192,57,43,0.35);
       background: var(--danger-soft);
-      color: var(--danger);
+      color: var(--danger-light);
     }
 
     .score-pill small {
       display: block;
-      margin-top: 3px;
-      color: var(--muted);
+      margin-top: 4px;
+      color: var(--muted-dark);
       font-family: var(--body);
       font-size: 10px;
       font-weight: 400;
+      letter-spacing: 0;
     }
 
-    /* General Sections */
-
-    section {
-      padding: 85px 0 0;
-    }
+    /* ── SECTIONS ── */
+    section { padding: 96px 0 0; }
 
     .section-label {
-      margin-bottom: 12px;
-      color: var(--gold);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: var(--beige-darker);
       font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.12em;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
     }
 
+    .section-label::before {
+      content: "";
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--beige-darker);
+    }
+
     .section-title {
-      max-width: 800px;
-      margin-bottom: 16px;
-      font-size: clamp(28px, 4vw, 45px);
-      letter-spacing: -0.045em;
+      max-width: 780px;
+      margin-bottom: 18px;
+      font-size: clamp(26px, 3.8vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
     }
 
     .section-intro {
-      max-width: 760px;
-      margin-bottom: 38px;
+      max-width: 720px;
+      margin-bottom: 44px;
       color: var(--muted);
       font-size: 16px;
+      line-height: 1.75;
     }
 
-    .gold-rule {
+    .beige-rule {
       width: 100%;
       height: 1px;
-      margin: 54px 0 0;
-      background: linear-gradient(90deg, var(--gold), transparent);
-      opacity: 0.4;
+      margin: 60px 0 0;
+      background: linear-gradient(90deg, rgba(235,226,214,0.3), transparent 70%);
     }
 
-    /* Learning Cards */
-
+    /* ── LEARNING CARDS ── */
     .learning-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 13px;
+      gap: 14px;
     }
 
     .learning-card {
-      min-height: 165px;
-      padding: 21px;
+      padding: 28px 24px;
       border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--panel);
+      border-radius: var(--radius-lg);
+      background: var(--green-light);
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
     }
 
+    .learning-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--beige-darker), transparent);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .learning-card:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .learning-card:hover::before { opacity: 1; }
+
     .learning-card .number {
-      color: var(--gold);
+      color: var(--beige-darker);
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
     }
 
     .learning-card h3 {
-      margin: 26px 0 9px;
-      font-size: 17px;
+      margin: 22px 0 10px;
+      font-family: var(--body);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--beige);
     }
 
     .learning-card p {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 13.5px;
+      line-height: 1.65;
     }
 
-    @media (max-width: 900px) {
-      .learning-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
+    @media (max-width: 900px) { .learning-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .learning-grid { grid-template-columns: 1fr; } }
 
-    @media (max-width: 560px) {
-      .learning-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Concept Cards */
-
+    /* ── CONCEPT CARDS ── */
     .concept-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
+      gap: 20px;
     }
 
     .concept-card {
       position: relative;
       overflow: hidden;
-      padding: 27px;
+      padding: 32px;
       border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--panel);
+      border-radius: var(--radius-lg);
+      background: var(--green-light);
     }
 
-    .concept-card::after {
+    .concept-card::before {
       content: "";
       position: absolute;
-      top: -70px;
-      right: -70px;
-      width: 170px;
-      height: 170px;
+      top: -100px; right: -100px;
+      width: 220px; height: 220px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(215, 173, 69, 0.23), transparent 68%);
+      background: radial-gradient(circle, rgba(235,226,214,0.06), transparent 65%);
+      pointer-events: none;
     }
 
-    .concept-card.warning::after {
-      background: radial-gradient(circle, rgba(215, 101, 76, 0.2), transparent 68%);
+    .concept-card.warning::before {
+      background: radial-gradient(circle, rgba(192,57,43,0.1), transparent 65%);
     }
 
     .concept-card h3 {
-      margin-bottom: 12px;
-      font-size: 21px;
+      margin-bottom: 14px;
+      font-size: 22px;
+      font-weight: 700;
     }
 
     .concept-card p {
       color: var(--muted);
       font-size: 14.5px;
+      line-height: 1.7;
     }
 
     .concept-card .example {
-      margin-top: 20px;
-      padding-top: 15px;
-      border-top: 1px solid var(--line);
+      margin-top: 24px;
+      padding: 16px 18px;
+      border-radius: var(--radius-sm);
+      background: rgba(235,226,214,0.05);
+      border: 1px solid var(--line);
       color: var(--muted);
       font-size: 13.5px;
+      line-height: 1.6;
     }
 
     .concept-card .example strong {
       display: block;
-      margin-bottom: 4px;
-      color: var(--gold-light);
+      margin-bottom: 6px;
+      color: var(--beige-darker);
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
-    @media (max-width: 720px) {
-      .concept-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    @media (max-width: 720px) { .concept-grid { grid-template-columns: 1fr; } }
 
-    /* Workflow */
-
+    /* ── WORKFLOW ── */
     .workflow {
-      padding: 26px;
+      padding: 32px;
       border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--panel);
+      border-radius: var(--radius-lg);
+      background: var(--green-light);
     }
 
     .workflow-title {
-      margin-bottom: 24px;
-      color: var(--gold-light);
+      margin-bottom: 28px;
+      color: var(--beige-darker);
       font-family: var(--mono);
-      font-size: 13px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
     .workflow-row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
+      gap: 12px;
       align-items: center;
     }
 
     .workflow-step {
       position: relative;
-      min-height: 92px;
+      min-height: 88px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 13px;
-      border: 1px solid var(--gold-dark);
-      border-radius: 10px;
-      background: var(--panel-light);
-      color: var(--white);
+      padding: 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      background: var(--green);
+      color: var(--beige);
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11.5px;
+      font-weight: 600;
       text-align: center;
+      letter-spacing: 0.03em;
+      line-height: 1.4;
+      transition: all 0.2s ease;
+    }
+
+    .workflow-step:hover {
+      border-color: var(--beige-darker);
+      background: var(--green-light);
     }
 
     .workflow-step:not(:last-child)::after {
       content: "→";
       position: absolute;
-      right: -19px;
-      color: var(--gold);
-      font-size: 21px;
-    }
-
-    .workflow-step.safe {
-      border-color: rgba(157, 187, 106, 0.55);
-      box-shadow: inset 0 0 0 1px rgba(157, 187, 106, 0.08);
+      right: -20px;
+      color: var(--beige-darker);
+      font-size: 18px;
+      font-family: sans-serif;
     }
 
     .workflow-note {
       margin-top: 24px;
-      padding: 14px;
+      padding: 14px 18px;
       border-left: 2px solid var(--danger);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
       background: var(--danger-soft);
       color: var(--muted);
-      font-size: 13px;
+      font-size: 13.5px;
+      line-height: 1.65;
     }
 
     @media (max-width: 760px) {
-      .workflow-row {
-        grid-template-columns: 1fr;
-      }
-
-      .workflow-step:not(:last-child)::after {
-        content: "↓";
-        right: auto;
-        bottom: -25px;
-        left: 50%;
-      }
+      .workflow-row { grid-template-columns: 1fr; }
+      .workflow-step:not(:last-child)::after { content: "↓"; right: auto; bottom: -26px; left: 50%; transform: translateX(-50%); }
     }
 
-    /* Code Section */
-
+    /* ── CODE SECTION ── */
     .code-tabs {
       display: flex;
-      gap: 6px;
+      gap: 2px;
       border-bottom: 1px solid var(--line);
+      background: var(--green);
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      padding: 8px 8px 0;
     }
 
     .code-tab {
-      padding: 12px 17px;
-      border: 0;
-      border-bottom: 2px solid transparent;
+      padding: 10px 18px;
+      border: 1px solid transparent;
+      border-bottom: 0;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
       background: transparent;
       color: var(--muted);
       cursor: pointer;
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11.5px;
+      font-weight: 500;
       transition: all 0.2s ease;
+      position: relative;
+      top: 1px;
     }
 
     .code-tab.active {
-      border-color: var(--gold);
-      color: var(--gold-light);
+      border-color: var(--line);
+      border-bottom-color: var(--green-light);
+      background: var(--green-light);
+      color: var(--beige);
     }
+
+    .code-tab:not(.active):hover { color: var(--beige-dark); }
 
     .code-panel {
       display: none;
       overflow: hidden;
       border: 1px solid var(--line);
       border-top: 0;
-      border-radius: 0 0 14px 14px;
-      background: #0b0a08;
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      background: #010f09;
     }
 
-    .code-panel.active {
-      display: block;
-    }
+    .code-panel.active { display: block; }
 
     .code-toolbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 15px;
-      padding: 11px 18px;
+      padding: 12px 20px;
       border-bottom: 1px solid var(--line);
-      background: var(--panel);
+      background: var(--green-light);
     }
 
     .code-toolbar span {
@@ -721,141 +832,133 @@
     }
 
     .copy-button {
-      padding: 6px 10px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: var(--gold-soft);
-      color: var(--gold-light);
+      padding: 6px 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-sm);
+      background: var(--beige-soft);
+      color: var(--beige-dark);
       cursor: pointer;
       font-family: var(--mono);
       font-size: 11px;
+      font-weight: 600;
+      transition: all 0.2s ease;
     }
 
     .copy-button:hover {
-      background: rgba(215, 173, 69, 0.25);
+      background: rgba(235,226,214,0.15);
+      color: var(--beige);
     }
 
     pre {
       overflow-x: auto;
-      padding: 23px;
-      color: #ded7c8;
+      padding: 26px;
+      color: #c8c0b0;
       direction: ltr;
       text-align: left;
       font-family: var(--mono);
       font-size: 13px;
-      line-height: 1.75;
+      line-height: 1.8;
       white-space: pre;
     }
 
     .code-note {
-      padding: 14px 20px;
+      padding: 12px 20px;
       border-top: 1px solid var(--line);
       color: var(--muted);
       font-size: 13px;
+      font-family: var(--mono);
     }
 
-    .code-note.warning {
-      color: var(--danger);
-    }
+    .code-note.warning { color: var(--danger-light); }
+    .code-note.safe { color: var(--success); }
 
-    .code-note.safe {
-      color: var(--success);
-    }
+    @media (max-width: 600px) { pre { font-size: 11px; } }
 
-    @media (max-width: 600px) {
-      pre {
-        font-size: 11px;
-      }
-    }
-
-    /* Results */
-
+    /* ── RESULTS ── */
     .results-card {
-      padding: 28px;
+      padding: 32px;
       border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--panel);
+      border-radius: var(--radius-lg);
+      background: var(--green-light);
     }
 
-    .bar-row {
-      margin-bottom: 28px;
-    }
-
-    .bar-row:last-of-type {
-      margin-bottom: 19px;
-    }
+    .bar-row { margin-bottom: 32px; }
+    .bar-row:last-of-type { margin-bottom: 20px; }
 
     .bar-label {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 20px;
-      margin-bottom: 9px;
-      font-family: var(--mono);
-      font-size: 12px;
+      margin-bottom: 10px;
+      font-size: 13.5px;
+      color: var(--muted);
     }
 
     .bar-value {
-      color: var(--gold-light);
+      color: var(--beige);
+      font-family: var(--mono);
+      font-size: 15px;
       font-weight: 700;
     }
 
     .bar-track {
-      height: 15px;
+      height: 12px;
       overflow: hidden;
-      border: 1px solid var(--line);
       border-radius: 999px;
-      background: var(--black-soft);
+      background: rgba(235,226,214,0.06);
+      border: 1px solid var(--line);
     }
 
     .bar-fill {
       width: 0;
       height: 100%;
       border-radius: inherit;
-      transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: width 1.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .bar-fill.warning {
-      background: linear-gradient(90deg, #733325, var(--danger));
+      background: linear-gradient(90deg, rgba(192,57,43,0.6), var(--danger-light));
     }
 
     .bar-fill.safe {
-      background: linear-gradient(90deg, #697f3e, var(--gold-light));
+      background: linear-gradient(90deg, rgba(235,226,214,0.3), var(--beige));
     }
 
     .bar-description {
       margin-top: 7px;
       color: var(--muted-dark);
-      font-size: 12px;
+      font-size: 12.5px;
     }
 
     .run-button {
-      margin-top: 3px;
-      padding: 10px 16px;
-      border: 1px solid var(--gold-dark);
-      border-radius: 8px;
-      background: var(--gold);
-      color: var(--black);
+      padding: 12px 22px;
+      border: 1px solid rgba(235,226,214,0.3);
+      border-radius: var(--radius-sm);
+      background: var(--beige);
+      color: var(--green);
       cursor: pointer;
       font-family: var(--mono);
       font-size: 12px;
       font-weight: 700;
+      letter-spacing: 0.06em;
       transition: all 0.2s ease;
     }
 
     .run-button:hover {
-      background: var(--gold-light);
-      transform: translateY(-1px);
+      background: var(--beige-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
     }
 
     .result-disclaimer {
       margin-top: 20px;
       color: var(--muted-dark);
       font-size: 12px;
+      line-height: 1.65;
     }
 
-    /* Diagnostics */
-
+    /* ── DIAGNOSTICS ── */
     .diagnostics-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -863,136 +966,166 @@
     }
 
     .diagnostic-card {
-      padding: 23px;
+      padding: 28px;
       border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--panel);
+      border-radius: var(--radius-lg);
+      background: var(--green-light);
+      transition: all 0.25s ease;
+    }
+
+    .diagnostic-card:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
 
     .diagnostic-card .number {
-      color: var(--gold);
+      color: var(--beige-darker);
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
     }
 
     .diagnostic-card h3 {
-      margin: 15px 0 9px;
-      font-size: 19px;
+      margin: 16px 0 10px;
+      font-family: var(--body);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--beige);
     }
 
     .diagnostic-card p {
       color: var(--muted);
       font-size: 14px;
+      line-height: 1.68;
     }
 
     .diagnostic-card ul {
-      margin-top: 13px;
-      padding-left: 19px;
+      margin-top: 14px;
+      padding-left: 0;
+      list-style: none;
       color: var(--muted);
       font-size: 13px;
     }
 
     .diagnostic-card li {
-      margin-bottom: 5px;
+      padding: 5px 0 5px 18px;
+      position: relative;
+      border-bottom: 1px solid var(--line);
     }
 
-    @media (max-width: 720px) {
-      .diagnostics-grid {
-        grid-template-columns: 1fr;
-      }
+    .diagnostic-card li:last-child { border-bottom: 0; }
+
+    .diagnostic-card li::before {
+      content: "›";
+      position: absolute;
+      left: 4px;
+      color: var(--beige-darker);
     }
 
-    /* Patterns */
+    @media (max-width: 720px) { .diagnostics-grid { grid-template-columns: 1fr; } }
 
+    /* ── PATTERNS ── */
     .patterns-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
+      gap: 16px;
     }
 
     .pattern-card {
       overflow: hidden;
       border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--panel);
+      border-radius: var(--radius-lg);
+      background: var(--green-light);
       cursor: pointer;
-      transition: transform 0.25s ease, border-color 0.25s ease;
+      transition: all 0.25s ease;
     }
 
     .pattern-card:hover {
+      border-color: var(--line-strong);
       transform: translateY(-3px);
-      border-color: var(--gold);
+      box-shadow: var(--shadow-md);
+    }
+
+    .pattern-card.open {
+      border-color: rgba(235,226,214,0.28);
     }
 
     .pattern-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 15px;
-      padding: 21px;
+      gap: 16px;
+      padding: 22px 24px;
     }
 
     .pattern-head h3 {
-      font-size: 18px;
+      font-family: var(--body);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--beige);
     }
 
     .pattern-number {
       display: grid;
-      width: 31px;
-      height: 31px;
+      width: 32px; height: 32px;
       place-items: center;
-      border: 1px solid var(--gold-dark);
+      border: 1px solid var(--line-strong);
       border-radius: 50%;
-      color: var(--gold-light);
+      color: var(--beige-darker);
       font-family: var(--mono);
       font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
     }
 
     .pattern-summary {
-      padding: 0 21px 20px;
+      padding: 0 24px 20px;
       color: var(--muted);
       font-size: 13.5px;
+      line-height: 1.65;
     }
 
     .pattern-details {
       max-height: 0;
       overflow: hidden;
-      padding: 0 21px;
+      padding: 0 24px;
       border-top: 1px solid transparent;
       color: var(--muted);
       font-size: 13px;
-      transition: max-height 0.35s ease, padding 0.35s ease;
+      line-height: 1.68;
+      transition: max-height 0.38s ease, padding 0.38s ease, border-color 0.38s ease;
     }
 
     .pattern-card.open .pattern-details {
-      max-height: 230px;
-      padding-top: 17px;
-      padding-bottom: 20px;
+      max-height: 260px;
+      padding-top: 18px;
+      padding-bottom: 22px;
       border-color: var(--line);
     }
 
     .pattern-details strong {
       display: block;
-      margin: 8px 0 3px;
-      color: var(--gold-light);
+      margin: 10px 0 4px;
+      color: var(--beige-darker);
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
-    @media (max-width: 720px) {
-      .patterns-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    .pattern-details strong:first-child { margin-top: 0; }
 
-    /* Audit Checklist */
+    @media (max-width: 720px) { .patterns-grid { grid-template-columns: 1fr; } }
 
+    /* ── AUDIT CHECKLIST ── */
     .audit-card {
       overflow: hidden;
       border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--panel);
+      border-radius: var(--radius-lg);
+      background: var(--green-light);
     }
 
     .audit-header {
@@ -1000,18 +1133,21 @@
       align-items: center;
       justify-content: space-between;
       gap: 20px;
-      padding: 22px 25px;
+      padding: 24px 28px;
       border-bottom: 1px solid var(--line);
     }
 
     .audit-header h3 {
-      font-size: 20px;
+      font-family: var(--body);
+      font-size: 18px;
+      font-weight: 700;
     }
 
     .progress-text {
-      color: var(--gold-light);
+      color: var(--beige-darker);
       font-family: var(--mono);
       font-size: 12px;
+      font-weight: 600;
     }
 
     .audit-items {
@@ -1022,238 +1158,231 @@
     .audit-item {
       display: flex;
       align-items: flex-start;
-      gap: 12px;
-      padding: 19px 22px;
+      gap: 14px;
+      padding: 20px 24px;
       border-bottom: 1px solid var(--line);
+      transition: background 0.2s ease;
     }
 
-    .audit-item:nth-child(odd) {
-      border-right: 1px solid var(--line);
-    }
+    .audit-item:nth-child(odd) { border-right: 1px solid var(--line); }
+    .audit-item:hover { background: rgba(235,226,214,0.03); }
 
     .audit-item input {
-      width: 17px;
-      height: 17px;
+      width: 17px; height: 17px;
       margin-top: 3px;
-      accent-color: var(--gold);
+      accent-color: var(--beige);
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .audit-item label {
       color: var(--muted);
       cursor: pointer;
       font-size: 13.5px;
+      line-height: 1.6;
     }
 
     .audit-item label strong {
       display: block;
-      margin-bottom: 3px;
-      color: var(--white);
-    }
-
-    .audit-item.checked label {
-      color: var(--muted-dark);
-      text-decoration: line-through;
-    }
-
-    @media (max-width: 650px) {
-      .audit-items {
-        grid-template-columns: 1fr;
-      }
-
-      .audit-item:nth-child(odd) {
-        border-right: 0;
-      }
-    }
-
-    /* Quiz */
-
-    .quiz {
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--panel);
-    }
-
-    .quiz-intro {
-      padding: 22px 25px;
-      border-bottom: 1px solid var(--line);
-      color: var(--muted);
+      margin-bottom: 4px;
+      color: var(--beige);
       font-size: 14px;
     }
 
-    .quiz-intro strong {
-      color: var(--gold-light);
+    .audit-item.checked label { color: var(--muted-dark); text-decoration: line-through; }
+    .audit-item.checked label strong { color: var(--muted-dark); }
+
+    @media (max-width: 650px) {
+      .audit-items { grid-template-columns: 1fr; }
+      .audit-item:nth-child(odd) { border-right: 0; }
     }
+
+    /* ── QUIZ ── */
+    .quiz {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--green-light);
+    }
+
+    .quiz-intro {
+      padding: 20px 26px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+      background: rgba(235,226,214,0.03);
+    }
+
+    .quiz-intro strong { color: var(--beige); }
 
     .quiz-question {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
+      gap: 20px;
       flex-wrap: wrap;
-      padding: 21px 25px;
+      padding: 20px 26px;
       border-bottom: 1px solid var(--line);
+      transition: background 0.2s ease;
     }
 
-    .quiz-question:last-child {
-      border-bottom: 0;
-    }
+    .quiz-question:last-child { border-bottom: 0; }
+    .quiz-question:hover { background: rgba(235,226,214,0.025); }
 
     .feature-name {
-      color: var(--gold-light);
+      color: var(--beige);
       font-family: var(--mono);
       font-size: 13px;
+      font-weight: 600;
     }
 
     .feature-description {
       margin-top: 4px;
       color: var(--muted-dark);
-      font-size: 12px;
+      font-size: 12.5px;
     }
 
     .quiz-actions {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
     .quiz-button {
-      padding: 8px 12px;
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      background: var(--black-soft);
+      padding: 8px 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-sm);
+      background: transparent;
       color: var(--muted);
       cursor: pointer;
       font-family: var(--mono);
       font-size: 11px;
+      font-weight: 600;
+      transition: all 0.2s ease;
     }
 
     .quiz-button:hover {
-      border-color: var(--gold);
-      color: var(--gold-light);
+      border-color: var(--beige-darker);
+      color: var(--beige);
+      background: var(--beige-soft);
     }
 
     .quiz-result {
       display: none;
-      padding: 7px 10px;
-      border-radius: 6px;
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
       font-family: var(--mono);
       font-size: 11px;
+      font-weight: 600;
     }
 
-    .quiz-result.show {
-      display: inline-block;
-    }
+    .quiz-result.show { display: inline-block; }
+    .quiz-result.correct { background: var(--success-soft); color: var(--success); }
+    .quiz-result.incorrect { background: var(--danger-soft); color: var(--danger-light); }
 
-    .quiz-result.correct {
-      background: var(--success-soft);
-      color: var(--success);
-    }
-
-    .quiz-result.incorrect {
-      background: var(--danger-soft);
-      color: var(--danger);
-    }
-
-    /* Next Steps */
-
+    /* ── NEXT STEPS ── */
     .next-steps {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 18px;
+      gap: 20px;
     }
 
     .next-card {
-      padding: 26px;
+      padding: 30px;
       border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--panel);
+      border-radius: var(--radius-lg);
+      background: var(--green-light);
     }
 
     .next-card h3 {
-      margin-bottom: 12px;
-      font-size: 21px;
+      margin-bottom: 14px;
+      font-family: var(--body);
+      font-size: 20px;
+      font-weight: 700;
     }
 
     .next-card p {
       color: var(--muted);
       font-size: 14px;
+      line-height: 1.7;
     }
 
     .next-card ul {
-      margin-top: 15px;
-      padding-left: 20px;
+      margin-top: 16px;
+      padding-left: 0;
+      list-style: none;
       color: var(--muted);
       font-size: 13.5px;
     }
 
     .next-card li {
-      margin-bottom: 8px;
+      padding: 7px 0 7px 20px;
+      position: relative;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .next-card li:last-child { border-bottom: 0; }
+
+    .next-card li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--beige-darker);
+      font-size: 12px;
     }
 
     .cta {
-      margin-top: 25px;
-      padding: 25px;
-      border: 1px solid var(--gold-dark);
-      border-radius: 15px;
-      background:
-        linear-gradient(135deg, rgba(215, 173, 69, 0.13), transparent),
-        var(--panel);
+      margin-top: 28px;
+      padding: 28px 32px;
+      border: 1px solid rgba(235,226,214,0.2);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(235,226,214,0.06), transparent);
       color: var(--muted);
       font-size: 15px;
+      line-height: 1.7;
     }
 
-    .cta strong {
-      color: var(--gold-light);
-    }
+    .cta strong { color: var(--beige); }
 
-    @media (max-width: 720px) {
-      .next-steps {
-        grid-template-columns: 1fr;
-      }
-    }
+    @media (max-width: 720px) { .next-steps { grid-template-columns: 1fr; } }
 
-    /* References */
-
-    .references {
-      list-style: none;
-      border-top: 1px solid var(--line);
-    }
+    /* ── REFERENCES ── */
+    .references { list-style: none; }
 
     .references li {
       display: flex;
       align-items: flex-start;
-      gap: 14px;
-      padding: 17px 0;
+      gap: 16px;
+      padding: 18px 0;
       border-bottom: 1px solid var(--line);
       color: var(--muted);
       font-size: 13.5px;
+      line-height: 1.65;
     }
 
     .reference-number {
-      min-width: 25px;
-      color: var(--gold);
+      min-width: 28px;
+      color: var(--beige-darker);
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 1px;
     }
 
     .references a {
-      color: var(--gold-light);
+      color: var(--beige-dark);
       text-decoration: none;
       word-break: break-word;
+      transition: color 0.2s ease;
     }
 
-    .references a:hover {
-      text-decoration: underline;
-    }
+    .references a:hover { color: var(--beige); text-decoration: underline; }
 
-    /* Footer */
-
+    /* ── FOOTER ── */
     footer {
-      margin-top: 100px;
-      padding: 38px 0 60px;
+      margin-top: 110px;
+      padding: 40px 0 64px;
       border-top: 1px solid var(--line);
     }
 
@@ -1269,40 +1398,42 @@
       color: var(--muted-dark);
       font-family: var(--mono);
       font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── ANIMATIONS & UTILITIES ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.6s ease forwards;
     }
 
     @media (max-width: 600px) {
-      .container {
-        width: min(100% - 28px, 1160px);
-      }
-
-      .hero {
-        padding-top: 65px;
-      }
-
-      section {
-        padding-top: 65px;
-      }
-
-      .demo-footer {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .pipeline-stage {
-        padding-inline: 5px;
-      }
+      .container { width: min(100% - 32px, 1160px); }
+      .hero { padding-top: 72px; }
+      section { padding-top: 72px; }
+      .demo-footer { align-items: flex-start; flex-direction: column; }
+      .pipeline-stage { padding-inline: 8px; }
+      .audit-header { flex-direction: column; align-items: flex-start; gap: 8px; }
     }
   </style>
 </head>
 
 <body>
 
+  <noscript>
+    <p class="container">This interactive guide explains how to detect and prevent data leakage in machine learning, including target, preprocessing, temporal, group, identifier, and cross-validation leakage.</p>
+  </noscript>
+
   <!-- Navigation -->
   <nav>
     <div class="container nav-inner">
       <div class="brand">
         <span class="brand-mark"></span>
+        <span class="nav-divider"></span>
         DATA · LEAKAGE
       </div>
 
@@ -1321,11 +1452,15 @@
 
     <!-- Hero -->
     <header class="hero">
-      <div class="eyebrow">Interactive Machine Learning Guide</div>
+      <div class="eyebrow">
+        <span class="eyebrow-line"></span>
+        Interactive Machine Learning Guide
+      </div>
 
       <h1>
-        Data Leakage in Machine Learning:
-        <span class="gold-text">How to Detect and Prevent It</span>
+        Data Leakage in<br>
+        Machine Learning:<br>
+        <em>How to Detect and Prevent It</em>
       </h1>
 
       <p class="hero-subtitle">
@@ -1339,9 +1474,8 @@
       </p>
 
       <div class="hero-meta">
-        <span>Author: <strong>Moaz Ragab Kamel</strong></span>
-        <span>Co-author: <strong>@gsamuel.cs</strong></span>
-        
+        <span>Author:</span>
+        <strong>Moaz Ragab Kamel</strong>
       </div>
 
       <div class="tags">
@@ -1352,96 +1486,95 @@
         <span class="tag">MLOps</span>
       </div>
 
-      <div class="mentorship">
-        This project was developed as part of advanced technical training under the
-        mentorship of <strong>@gsamuel.cs</strong>.
-      </div>
-
       <!-- Interactive Pipeline -->
       <div class="demo" id="pipeline">
         <div class="demo-header">
-          <h3>Interactive Pipeline: When Does the Model Learn?</h3>
+          <h3>Interactive Pipeline — When Does the Model Learn?</h3>
 
           <div class="mode-toggle">
-            <button type="button" id="leakyMode" class="active">
-              Leaky Workflow
-            </button>
-
-            <button type="button" id="safeMode">
-              Safe Workflow
-            </button>
+            <button type="button" id="leakyMode" class="active">Leaky Workflow</button>
+            <button type="button" id="safeMode">Safe Workflow</button>
           </div>
         </div>
 
         <div class="pipeline-stage">
           <svg id="pipeline-svg" viewBox="0 0 920 260" xmlns="http://www.w3.org/2000/svg" aria-label="Machine learning data pipeline">
             <defs>
-              <marker id="gold-arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-                <path d="M0,0 L8,4 L0,8 Z" fill="#d7ad45"></path>
+              <marker id="beige-arrow" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 Z" fill="rgba(235,226,214,0.35)"></path>
               </marker>
-
-              <marker id="danger-arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-                <path d="M0,0 L8,4 L0,8 Z" fill="#d7654c"></path>
+              <marker id="danger-arrow" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 Z" fill="#e74c3c"></path>
               </marker>
+              <filter id="glow-beige">
+                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="glow-danger">
+                <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
             </defs>
 
-            <!-- Main workflow -->
-            <path class="svg-flow" d="M125 135 L225 135" marker-end="url(#gold-arrow)"></path>
-            <path class="svg-flow" d="M340 135 L440 135" marker-end="url(#gold-arrow)"></path>
-            <path class="svg-flow" d="M555 135 L655 135" marker-end="url(#gold-arrow)"></path>
-            <path class="svg-flow" d="M770 135 L850 135" marker-end="url(#gold-arrow)"></path>
+            <!-- Flow arrows -->
+            <path class="svg-flow" d="M125 135 L222 135" marker-end="url(#beige-arrow)"></path>
+            <path class="svg-flow" d="M340 135 L437 135" marker-end="url(#beige-arrow)"></path>
+            <path class="svg-flow" d="M555 135 L652 135" marker-end="url(#beige-arrow)"></path>
+            <path class="svg-flow" d="M770 135 L847 135" marker-end="url(#beige-arrow)"></path>
 
             <!-- Leakage path -->
-            <path
-              id="leak-path"
-              class="svg-leak"
-              d="M770 107 C680 24, 285 25, 225 108"
+            <path id="leak-path" class="svg-leak"
+              d="M770 107 C680 22, 285 22, 225 108"
               marker-end="url(#danger-arrow)">
             </path>
 
             <!-- Safe gate -->
             <g id="safe-gate" class="svg-gate" opacity="0">
-              <rect x="272" y="97" width="25" height="76" rx="7" fill="#11100d" stroke="#d7ad45" stroke-width="2"></rect>
-              <path d="M279 125 V117 A6 6 0 0 1 291 117 V125" fill="none" stroke="#d7ad45" stroke-width="2"></path>
-              <rect x="278" y="124" width="13" height="16" rx="2" fill="#d7ad45"></rect>
+              <rect x="271" y="96" width="26" height="78" rx="8" fill="#01301E" stroke="rgba(235,226,214,0.4)" stroke-width="1.5"></rect>
+              <path d="M279 124 V116 A5 5 0 0 1 289 116 V124" fill="none" stroke="rgba(235,226,214,0.6)" stroke-width="1.8"></path>
+              <rect x="277" y="123" width="12" height="15" rx="2" fill="rgba(235,226,214,0.5)"></rect>
             </g>
 
             <!-- Warning icon -->
-            <g id="warning-icon" class="svg-warning" transform="translate(510 35)">
-              <path d="M0,-17 L17,13 L-17,13 Z" fill="#2b1712" stroke="#d7654c" stroke-width="2"></path>
-              <line x1="0" y1="-7" x2="0" y2="3" stroke="#d7654c" stroke-width="2" stroke-linecap="round"></line>
-              <circle cx="0" cy="8" r="1.7" fill="#d7654c"></circle>
+            <g id="warning-icon" class="svg-warning" transform="translate(510 34)">
+              <path d="M0,-16 L16,13 L-16,13 Z" fill="rgba(192,57,43,0.2)" stroke="#e74c3c" stroke-width="1.8"></path>
+              <line x1="0" y1="-7" x2="0" y2="2" stroke="#e74c3c" stroke-width="2" stroke-linecap="round"></line>
+              <circle cx="0" cy="7" r="1.6" fill="#e74c3c"></circle>
             </g>
 
-            <!-- Nodes -->
+            <!-- Node: Raw Data -->
             <g>
-              <rect class="svg-node" x="20" y="110" width="105" height="50" rx="10"></rect>
-              <text class="svg-label" x="72" y="132">Raw Data</text>
+              <rect class="svg-node-bg" x="20" y="109" width="105" height="52" rx="10"></rect>
+              <text class="svg-label" x="72" y="131">Raw Data</text>
               <text class="svg-subtitle" x="72" y="147">200 × 10,000</text>
             </g>
 
+            <!-- Node: Split -->
             <g>
-              <rect class="svg-node" x="225" y="110" width="115" height="50" rx="10"></rect>
-              <text class="svg-label" x="282" y="132">Split</text>
+              <rect class="svg-node-bg" x="225" y="109" width="115" height="52" rx="10"></rect>
+              <text class="svg-label" x="282" y="131">Split</text>
               <text class="svg-subtitle" x="282" y="147">Train / Test</text>
             </g>
 
+            <!-- Node: Transform -->
             <g>
-              <rect class="svg-node" x="440" y="110" width="115" height="50" rx="10"></rect>
-              <text class="svg-label" x="497" y="132">Transform</text>
+              <rect class="svg-node-bg" x="440" y="109" width="115" height="52" rx="10"></rect>
+              <text class="svg-label" x="497" y="131">Transform</text>
               <text id="transform-subtitle" class="svg-subtitle" x="497" y="147">Train only</text>
             </g>
 
+            <!-- Node: Train Model -->
             <g>
-              <rect class="svg-node" x="655" y="110" width="115" height="50" rx="10"></rect>
-              <text class="svg-label" x="712" y="132">Train Model</text>
+              <rect class="svg-node-bg" x="655" y="109" width="115" height="52" rx="10"></rect>
+              <text class="svg-label" x="712" y="131">Train Model</text>
               <text class="svg-subtitle" x="712" y="147">Classifier</text>
             </g>
 
+            <!-- Node: Test Score -->
             <g>
-              <rect class="svg-node" x="850" y="110" width="55" height="50" rx="10"></rect>
-              <text class="svg-label" x="877" y="131" style="font-size: 10px;">Test</text>
-              <text class="svg-label" x="877" y="145" style="font-size: 10px;">Score</text>
+              <rect class="svg-node-bg active-node" x="848" y="109" width="57" height="52" rx="10"></rect>
+              <text class="svg-label" x="876" y="129" style="font-size:10.5px">Test</text>
+              <text class="svg-label" x="876" y="146" style="font-size:10.5px">Score</text>
             </g>
 
             <g id="particle-layer"></g>
@@ -1463,12 +1596,10 @@
       </div>
     </header>
 
-    <!-- What You Will Learn -->
+    <!-- Learning Objectives -->
     <section id="learn">
-      <div class="section-label">00 / LEARNING OBJECTIVES</div>
-
+      <div class="section-label">00 — Learning Objectives</div>
       <h2 class="section-title">What You Will Learn</h2>
-
       <p class="section-intro">
         This guide turns a common machine learning failure mode into a practical
         workflow that can be applied to real projects.
@@ -1503,10 +1634,8 @@
 
     <!-- Concept -->
     <section id="concept">
-      <div class="section-label">01 / CONCEPT AND ARCHITECTURE</div>
-
+      <div class="section-label">01 — Concept and Architecture</div>
       <h2 class="section-title">What Is Data Leakage?</h2>
-
       <p class="section-intro">
         Data leakage is the accidental use of information from outside the legitimate
         training boundary. The information may come from the future, from the held-out
@@ -1516,13 +1645,11 @@
       <div class="concept-grid">
         <article class="concept-card warning">
           <h3>Target Leakage</h3>
-
           <p>
             A feature contains information created after, or because of, the target event.
             The feature may be highly predictive offline but unavailable when the model is
             actually used.
           </p>
-
           <div class="example">
             <strong>Typical Example</strong>
             Using a cancellation reason to predict whether an order will be cancelled.
@@ -1531,12 +1658,10 @@
 
         <article class="concept-card">
           <h3>Train–Test Contamination</h3>
-
           <p>
             Information from the held-out test set influences preprocessing, feature selection,
             hyper-parameter tuning, or model fitting.
           </p>
-
           <div class="example">
             <strong>Typical Example</strong>
             Computing scaling statistics or selecting features on all rows before splitting.
@@ -1544,19 +1669,17 @@
         </article>
       </div>
 
-      <div class="gold-rule"></div>
+      <div class="beige-rule"></div>
 
-      <div class="workflow" style="margin-top: 42px;">
-        <div class="workflow-title">The correct order of operations</div>
-
+      <div class="workflow" style="margin-top: 44px;">
+        <div class="workflow-title">— The correct order of operations</div>
         <div class="workflow-row">
-          <div class="workflow-step safe">Raw Data</div>
-          <div class="workflow-step safe">Split Train / Test</div>
-          <div class="workflow-step safe">Fit on Train Only</div>
-          <div class="workflow-step safe">Train Model</div>
-          <div class="workflow-step safe">Evaluate Test</div>
+          <div class="workflow-step">Raw Data</div>
+          <div class="workflow-step">Split Train / Test</div>
+          <div class="workflow-step">Fit on Train Only</div>
+          <div class="workflow-step">Train Model</div>
+          <div class="workflow-step">Evaluate Test</div>
         </div>
-
         <div class="workflow-note">
           The test set must remain untouched until the final evaluation.
           The common mistake is to fit preprocessing on all rows before the split.
@@ -1566,10 +1689,8 @@
 
     <!-- Implementation -->
     <section id="implementation">
-      <div class="section-label">02 / STEP-BY-STEP IMPLEMENTATION</div>
-
+      <div class="section-label">02 — Step-by-Step Implementation</div>
       <h2 class="section-title">The Wrong Way vs. the Safe Way</h2>
-
       <p class="section-intro">
         The example uses 10,000 random features and random binary labels.
         Because the labels contain no real signal, a leakage-free classifier should perform
@@ -1582,13 +1703,11 @@
         <button type="button" class="code-tab" data-tab="time">time_and_group_splits.py</button>
       </div>
 
-      <!-- Wrong Code -->
       <div class="code-panel active" id="code-wrong">
         <div class="code-toolbar">
           <span>Feature selection before the split</span>
           <button type="button" class="copy-button" data-copy="wrong-code">Copy code</button>
         </div>
-
         <pre id="wrong-code"><code># Imports
 import numpy as np
 
@@ -1625,19 +1744,16 @@ leaky_accuracy = accuracy_score(
 
 print(leaky_accuracy)
 # A representative run may produce an inflated score such as 0.76.</code></pre>
-
         <div class="code-note warning">
-          Warning: the test labels influenced feature selection before the evaluation boundary was established.
+          ⚠ Warning: the test labels influenced feature selection before the evaluation boundary was established.
         </div>
       </div>
 
-      <!-- Safe Code -->
       <div class="code-panel" id="code-safe">
         <div class="code-toolbar">
           <span>Feature selection inside a Pipeline</span>
           <button type="button" class="copy-button" data-copy="safe-code">Copy code</button>
         </div>
-
         <pre id="safe-code"><code>from sklearn.pipeline import make_pipeline
 
 # Split before learning anything from the data
@@ -1662,19 +1778,16 @@ safe_accuracy = accuracy_score(y_test, y_pred)
 
 print(safe_accuracy)
 # A leakage-free result should be close to 0.50.</code></pre>
-
         <div class="code-note safe">
-          Safe workflow: the selector learns from X_train and y_train only, then transforms X_test without relearning.
+          ✓ Safe workflow: the selector learns from X_train and y_train only, then transforms X_test without relearning.
         </div>
       </div>
 
-      <!-- Time and Group Code -->
       <div class="code-panel" id="code-time">
         <div class="code-toolbar">
           <span>Time-aware and group-aware evaluation</span>
           <button type="button" class="copy-button" data-copy="time-code">Copy code</button>
         </div>
-
         <pre id="time-code"><code>from sklearn.model_selection import (
     GroupKFold,
     TimeSeriesSplit,
@@ -1715,7 +1828,6 @@ group_scores = cross_val_score(
 
 print("Group-aware mean:", group_scores.mean())
 print("Group-aware std:", group_scores.std())</code></pre>
-
         <div class="code-note">
           Use the splitter that matches the way your model must generalize in production.
         </div>
@@ -1724,12 +1836,8 @@ print("Group-aware std:", group_scores.std())</code></pre>
 
     <!-- Results -->
     <section id="results">
-      <div class="section-label">03 / RESULTS AND MEASUREMENT</div>
-
-      <h2 class="section-title">
-        A Lower Score Can Be a Better Result
-      </h2>
-
+      <div class="section-label">03 — Results and Measurement</div>
+      <h2 class="section-title">A Lower Score Can Be a Better Result</h2>
       <p class="section-intro">
         The difference between the two scores is not necessarily a model improvement.
         It is often a correction in how the experiment measures generalization.
@@ -1741,14 +1849,10 @@ print("Group-aware std:", group_scores.std())</code></pre>
             <span>Feature selection before split</span>
             <span class="bar-value" id="leaky-value">0.00</span>
           </div>
-
           <div class="bar-track">
             <div class="bar-fill warning" id="leaky-bar"></div>
           </div>
-
-          <div class="bar-description">
-            The selector was allowed to see all labels, including test labels.
-          </div>
+          <div class="bar-description">The selector was allowed to see all labels, including test labels.</div>
         </div>
 
         <div class="bar-row">
@@ -1756,19 +1860,13 @@ print("Group-aware std:", group_scores.std())</code></pre>
             <span>Pipeline after split</span>
             <span class="bar-value" id="safe-value">0.00</span>
           </div>
-
           <div class="bar-track">
             <div class="bar-fill safe" id="safe-bar"></div>
           </div>
-
-          <div class="bar-description">
-            Transformations were fitted using training data only.
-          </div>
+          <div class="bar-description">Transformations were fitted using training data only.</div>
         </div>
 
-        <button type="button" class="run-button" id="run-comparison">
-          Run comparison
-        </button>
+        <button type="button" class="run-button" id="run-comparison">Run Comparison</button>
 
         <p class="result-disclaimer">
           The displayed values represent a reproducible-style demonstration.
@@ -1779,10 +1877,8 @@ print("Group-aware std:", group_scores.std())</code></pre>
 
     <!-- Detection -->
     <section id="detection">
-      <div class="section-label">04 / DETECTION WORKFLOW</div>
-
+      <div class="section-label">04 — Detection Workflow</div>
       <h2 class="section-title">How to Investigate Leakage</h2>
-
       <p class="section-intro">
         Leakage detection starts with understanding the data timeline and the evaluation process,
         not with immediately choosing a more complex algorithm.
@@ -1792,11 +1888,7 @@ print("Group-aware std:", group_scores.std())</code></pre>
         <article class="diagnostic-card">
           <span class="number">01</span>
           <h3>Build a Timeline</h3>
-          <p>
-            Document when every feature is created and whether it is available at the exact
-            prediction timestamp.
-          </p>
-
+          <p>Document when every feature is created and whether it is available at the exact prediction timestamp.</p>
           <ul>
             <li>Feature creation time</li>
             <li>Source system</li>
@@ -1807,11 +1899,7 @@ print("Group-aware std:", group_scores.std())</code></pre>
         <article class="diagnostic-card">
           <span class="number">02</span>
           <h3>Inspect the Evaluation Code</h3>
-          <p>
-            Search for learned operations that may have been executed before splitting or outside
-            cross-validation.
-          </p>
-
+          <p>Search for learned operations that may have been executed before splitting or outside cross-validation.</p>
           <ul>
             <li><code>fit</code> and <code>fit_transform</code></li>
             <li>Feature selection and normalization</li>
@@ -1822,10 +1910,7 @@ print("Group-aware std:", group_scores.std())</code></pre>
         <article class="diagnostic-card">
           <span class="number">03</span>
           <h3>Run Sanity Checks</h3>
-          <p>
-            Compare the model against simple baselines and intentionally random labels.
-          </p>
-
+          <p>Compare the model against simple baselines and intentionally random labels.</p>
           <ul>
             <li>Evaluate on a later time window</li>
             <li>Remove suspicious columns</li>
@@ -1836,10 +1921,7 @@ print("Group-aware std:", group_scores.std())</code></pre>
         <article class="diagnostic-card">
           <span class="number">04</span>
           <h3>Review Feature Importance</h3>
-          <p>
-            Feature importance is an investigation queue, not proof that a feature is valid.
-          </p>
-
+          <p>Feature importance is an investigation queue, not proof that a feature is valid.</p>
           <ul>
             <li>Inspect high-scoring features</li>
             <li>Check domain meaning</li>
@@ -1851,33 +1933,22 @@ print("Group-aware std:", group_scores.std())</code></pre>
 
     <!-- Challenges -->
     <section id="challenges">
-      <div class="section-label">05 / CHALLENGES AND GOTCHAS</div>
-
-      <h2 class="section-title">Four Ways a Model Can “See the Future”</h2>
-
-      <p class="section-intro">
-        Select a card to reveal the common failure mode and the recommended solution.
-      </p>
+      <div class="section-label">05 — Challenges and Gotchas</div>
+      <h2 class="section-title">Four Ways a Model Can "See the Future"</h2>
+      <p class="section-intro">Select a card to reveal the common failure mode and the recommended solution.</p>
 
       <div class="patterns-grid">
-
         <article class="pattern-card">
           <div class="pattern-head">
             <h3>Target Leakage</h3>
             <span class="pattern-number">01</span>
           </div>
-
-          <p class="pattern-summary">
-            A post-outcome field becomes a predictive feature.
-          </p>
-
+          <p class="pattern-summary">A post-outcome field becomes a predictive feature.</p>
           <div class="pattern-details">
             <strong>Problem</strong>
             The feature was created after, or because of, the target event.
-
             <strong>Solution</strong>
-            Remove features that are unavailable at prediction time and document the availability
-            timestamp of every column.
+            Remove features that are unavailable at prediction time and document the availability timestamp of every column.
           </div>
         </article>
 
@@ -1886,18 +1957,12 @@ print("Group-aware std:", group_scores.std())</code></pre>
             <h3>Preprocessing Leakage</h3>
             <span class="pattern-number">02</span>
           </div>
-
-          <p class="pattern-summary">
-            A transformation learns from held-out rows.
-          </p>
-
+          <p class="pattern-summary">A transformation learns from held-out rows.</p>
           <div class="pattern-details">
             <strong>Problem</strong>
             Scaling, PCA, feature selection, or imputation is fitted on the full dataset.
-
             <strong>Solution</strong>
-            Place the transformation inside a Pipeline so every fold learns only from its
-            training portion.
+            Place the transformation inside a Pipeline so every fold learns only from its training portion.
           </div>
         </article>
 
@@ -1906,15 +1971,10 @@ print("Group-aware std:", group_scores.std())</code></pre>
             <h3>Temporal Leakage</h3>
             <span class="pattern-number">03</span>
           </div>
-
-          <p class="pattern-summary">
-            Training includes observations from the future.
-          </p>
-
+          <p class="pattern-summary">Training includes observations from the future.</p>
           <div class="pattern-details">
             <strong>Problem</strong>
             Random splitting allows future observations to appear in the training set.
-
             <strong>Solution</strong>
             Use TimeSeriesSplit or rolling-origin evaluation with a suitable gap.
           </div>
@@ -1925,15 +1985,10 @@ print("Group-aware std:", group_scores.std())</code></pre>
             <h3>Group Leakage</h3>
             <span class="pattern-number">04</span>
           </div>
-
-          <p class="pattern-summary">
-            The same entity appears in both training and test data.
-          </p>
-
+          <p class="pattern-summary">The same entity appears in both training and test data.</p>
           <div class="pattern-details">
             <strong>Problem</strong>
             The model memorizes a customer, patient, user, or image source.
-
             <strong>Solution</strong>
             Split by entity using GroupKFold, GroupShuffleSplit, or another group-aware strategy.
           </div>
@@ -1944,15 +1999,10 @@ print("Group-aware std:", group_scores.std())</code></pre>
             <h3>Cross-Validation Leakage</h3>
             <span class="pattern-number">05</span>
           </div>
-
-          <p class="pattern-summary">
-            Preprocessing is fitted once before cross-validation.
-          </p>
-
+          <p class="pattern-summary">Preprocessing is fitted once before cross-validation.</p>
           <div class="pattern-details">
             <strong>Problem</strong>
             Every fold has already seen information from its held-out rows.
-
             <strong>Solution</strong>
             Pass the complete Pipeline to cross-validation instead of passing only the final estimator.
           </div>
@@ -1963,32 +2013,22 @@ print("Group-aware std:", group_scores.std())</code></pre>
             <h3>Identifier Leakage</h3>
             <span class="pattern-number">06</span>
           </div>
-
-          <p class="pattern-summary">
-            An ID encodes identity, chronology, or batch information.
-          </p>
-
+          <p class="pattern-summary">An ID encodes identity, chronology, or batch information.</p>
           <div class="pattern-details">
             <strong>Problem</strong>
             The model learns a pattern that will not transfer to new entities or future batches.
-
             <strong>Solution</strong>
             Remove identifiers by default or document why they are valid and stable at prediction time.
           </div>
         </article>
-
       </div>
     </section>
 
     <!-- Audit Checklist -->
     <section id="audit">
-      <div class="section-label">06 / PRACTICAL AUDIT</div>
-
+      <div class="section-label">06 — Practical Audit</div>
       <h2 class="section-title">Leakage Audit Checklist</h2>
-
-      <p class="section-intro">
-        Use this checklist before publishing or deploying a machine learning model.
-      </p>
+      <p class="section-intro">Use this checklist before publishing or deploying a machine learning model.</p>
 
       <div class="audit-card">
         <div class="audit-header">
@@ -2050,18 +2090,14 @@ print("Group-aware std:", group_scores.std())</code></pre>
 
     <!-- Quiz -->
     <section id="quiz">
-      <div class="section-label">07 / AUDIT DRILL</div>
-
+      <div class="section-label">07 — Audit Drill</div>
       <h2 class="section-title">Would This Feature Be Available at Prediction Time?</h2>
-
-      <p class="section-intro">
-        Choose an answer for each feature before revealing the correct verdict.
-      </p>
+      <p class="section-intro">Choose an answer for each feature before revealing the correct verdict.</p>
 
       <div class="quiz">
         <div class="quiz-intro">
           The key question is:
-          <strong>“Would this exact value be available at the moment of prediction?”</strong>
+          <strong>"Would this exact value be available at the moment of prediction?"</strong>
         </div>
 
         <div class="quiz-question" data-answer="no">
@@ -2069,7 +2105,6 @@ print("Group-aware std:", group_scores.std())</code></pre>
             <div class="feature-name">cancellation_reason</div>
             <div class="feature-description">Recorded after the order has already been cancelled.</div>
           </div>
-
           <div class="quiz-actions">
             <button type="button" class="quiz-button" data-choice="yes">Available</button>
             <button type="button" class="quiz-button" data-choice="no">Not available</button>
@@ -2082,7 +2117,6 @@ print("Group-aware std:", group_scores.std())</code></pre>
             <div class="feature-name">customer_signup_date</div>
             <div class="feature-description">Known when the customer is created and remains stable.</div>
           </div>
-
           <div class="quiz-actions">
             <button type="button" class="quiz-button" data-choice="yes">Available</button>
             <button type="button" class="quiz-button" data-choice="no">Not available</button>
@@ -2095,7 +2129,6 @@ print("Group-aware std:", group_scores.std())</code></pre>
             <div class="feature-name">scaled_feature</div>
             <div class="feature-description">StandardScaler was fitted before the train/test split.</div>
           </div>
-
           <div class="quiz-actions">
             <button type="button" class="quiz-button" data-choice="yes">Available</button>
             <button type="button" class="quiz-button" data-choice="no">Not available</button>
@@ -2108,7 +2141,6 @@ print("Group-aware std:", group_scores.std())</code></pre>
             <div class="feature-name">product_category</div>
             <div class="feature-description">Part of the product record available before prediction.</div>
           </div>
-
           <div class="quiz-actions">
             <button type="button" class="quiz-button" data-choice="yes">Available</button>
             <button type="button" class="quiz-button" data-choice="no">Not available</button>
@@ -2118,27 +2150,20 @@ print("Group-aware std:", group_scores.std())</code></pre>
       </div>
     </section>
 
-    <!-- Results and Next Steps -->
+    <!-- Next Steps -->
     <section id="next-steps">
-      <div class="section-label">08 / RESULTS AND NEXT STEPS</div>
-
+      <div class="section-label">08 — Results and Next Steps</div>
       <h2 class="section-title">Build More Credible Evaluations</h2>
-
       <p class="section-intro">
         A lower score is sometimes a better result when it reflects the deployment reality.
-        The objective is not to maximize the validation number at any cost. The objective is to
+        The objective is not to maximize the validation number at any cost — it is to
         measure the performance that can be expected on genuinely new data.
       </p>
 
       <div class="next-steps">
         <article class="next-card">
           <h3>What the Experiment Shows</h3>
-
-          <p>
-            On random labels, a leaky protocol can produce an impressive-looking score even
-            though there is no real predictive signal.
-          </p>
-
+          <p>On random labels, a leaky protocol can produce an impressive-looking score even though there is no real predictive signal.</p>
           <ul>
             <li>Leakage makes weak models look stronger.</li>
             <li>The evaluation boundary must be protected.</li>
@@ -2149,11 +2174,7 @@ print("Group-aware std:", group_scores.std())</code></pre>
 
         <article class="next-card">
           <h3>Recommended Next Steps</h3>
-
-          <p>
-            Add leakage checks to the project definition of done before publishing or deploying.
-          </p>
-
+          <p>Add leakage checks to the project definition of done before publishing or deploying.</p>
           <ul>
             <li>Review every feature timeline.</li>
             <li>Freeze the final test set.</li>
@@ -2164,75 +2185,51 @@ print("Group-aware std:", group_scores.std())</code></pre>
       </div>
 
       <div class="cta">
-        If this article helped you, share your experience in the comments or connect with me
-        on LinkedIn. Questions and feedback are welcome.
+        If this article helped you, share your experience in the comments or connect with
+        <strong>Moaz Ragab Kamel</strong> on LinkedIn. Questions and feedback are always welcome.
       </div>
     </section>
 
     <!-- References -->
     <section id="references">
-      <div class="section-label">09 / REFERENCES</div>
-
+      <div class="section-label">09 — References</div>
       <h2 class="section-title">References</h2>
 
       <ul class="references">
         <li>
           <span class="reference-number">[1]</span>
-          <span>
-            Scikit-learn — Common pitfalls and recommended practices —
-            <a href="https://scikit-learn.org/stable/common_pitfalls.html" target="_blank" rel="noopener noreferrer">
-              scikit-learn.org/stable/common_pitfalls.html
-            </a>
+          <span>Scikit-learn — Common pitfalls and recommended practices —
+            <a href="https://scikit-learn.org/stable/common_pitfalls.html" target="_blank" rel="noopener noreferrer">scikit-learn.org/stable/common_pitfalls.html</a>
           </span>
         </li>
-
         <li>
           <span class="reference-number">[2]</span>
-          <span>
-            Scikit-learn — Pipelines and composite estimators —
-            <a href="https://scikit-learn.org/stable/modules/compose.html" target="_blank" rel="noopener noreferrer">
-              scikit-learn.org/stable/modules/compose.html
-            </a>
+          <span>Scikit-learn — Pipelines and composite estimators —
+            <a href="https://scikit-learn.org/stable/modules/compose.html" target="_blank" rel="noopener noreferrer">scikit-learn.org/stable/modules/compose.html</a>
           </span>
         </li>
-
         <li>
           <span class="reference-number">[3]</span>
-          <span>
-            Scikit-learn — TimeSeriesSplit API reference —
-            <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html" target="_blank" rel="noopener noreferrer">
-              TimeSeriesSplit documentation
-            </a>
+          <span>Scikit-learn — TimeSeriesSplit API reference —
+            <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html" target="_blank" rel="noopener noreferrer">TimeSeriesSplit documentation</a>
           </span>
         </li>
-
         <li>
           <span class="reference-number">[4]</span>
-          <span>
-            Kaggle — Data Leakage —
-            <a href="https://www.kaggle.com/code/alexisbcook/data-leakage" target="_blank" rel="noopener noreferrer">
-              Practical examples of target leakage and train–test contamination
-            </a>
+          <span>Kaggle — Data Leakage —
+            <a href="https://www.kaggle.com/code/alexisbcook/data-leakage" target="_blank" rel="noopener noreferrer">Practical examples of target leakage and train–test contamination</a>
           </span>
         </li>
-
         <li>
           <span class="reference-number">[5]</span>
-          <span>
-            Kaufman et al. — Leakage in Data Mining: Formulation, Detection, and Avoidance —
-            <a href="https://dl.acm.org/doi/10.1145/2020408.2020409" target="_blank" rel="noopener noreferrer">
-              ACM Transactions on Knowledge Discovery from Data
-            </a>
+          <span>Kaufman et al. — Leakage in Data Mining: Formulation, Detection, and Avoidance —
+            <a href="https://dl.acm.org/doi/10.1145/2020408.2020409" target="_blank" rel="noopener noreferrer">ACM Transactions on Knowledge Discovery from Data</a>
           </span>
         </li>
-
         <li>
           <span class="reference-number">[6]</span>
-          <span>
-            IBM — What Is Data Leakage in Machine Learning? —
-            <a href="https://www.ibm.com/think/topics/data-leakage-machine-learning" target="_blank" rel="noopener noreferrer">
-              Overview of target leakage and train–test contamination
-            </a>
+          <span>IBM — What Is Data Leakage in Machine Learning? —
+            <a href="https://www.ibm.com/think/topics/data-leakage-machine-learning" target="_blank" rel="noopener noreferrer">Overview of target leakage and train–test contamination</a>
           </span>
         </li>
       </ul>
@@ -2243,334 +2240,188 @@ print("Group-aware std:", group_scores.std())</code></pre>
   <footer>
     <div class="container footer-inner">
       <p>Data Leakage in Machine Learning · Interactive Edition</p>
-      <p>Prepared by Moaz Ragab Kamel · Co-author @gsamuel.cs</p>
+      <p>Prepared by Moaz Ragab Kamel</p>
     </div>
   </footer>
 
   <script>
-    /* ---------------------------------
-       Interactive Pipeline
-    --------------------------------- */
-
-    const leakyModeButton = document.getElementById("leakyMode");
-    const safeModeButton = document.getElementById("safeMode");
-
-    const leakPath = document.getElementById("leak-path");
-    const safeGate = document.getElementById("safe-gate");
-    const warningIcon = document.getElementById("warning-icon");
-    const transformSubtitle = document.getElementById("transform-subtitle");
-    const pipelineReadout = document.getElementById("pipeline-readout");
-    const pipelineScore = document.getElementById("pipeline-score");
-    const particleLayer = document.getElementById("particle-layer");
+    /* ── PIPELINE ── */
+    const leakyModeBtn = document.getElementById("leakyMode");
+    const safeModeBtn  = document.getElementById("safeMode");
+    const leakPath     = document.getElementById("leak-path");
+    const safeGate     = document.getElementById("safe-gate");
+    const warningIcon  = document.getElementById("warning-icon");
+    const transformSub = document.getElementById("transform-subtitle");
+    const pipeReadout  = document.getElementById("pipeline-readout");
+    const pipeScore    = document.getElementById("pipeline-score");
+    const particleLayer= document.getElementById("particle-layer");
 
     let currentMode = "leaky";
     let particleInterval = null;
 
     function setPipelineMode(mode) {
       currentMode = mode;
-
       const isLeaky = mode === "leaky";
 
-      leakyModeButton.classList.toggle("active", isLeaky);
-      safeModeButton.classList.toggle("active", !isLeaky);
+      leakyModeBtn.classList.toggle("active", isLeaky);
+      safeModeBtn.classList.toggle("active", !isLeaky);
 
-      leakPath.style.opacity = isLeaky ? "1" : "0";
-      safeGate.style.opacity = isLeaky ? "0" : "1";
+      leakPath.style.opacity    = isLeaky ? "1" : "0";
+      safeGate.style.opacity    = isLeaky ? "0" : "1";
       warningIcon.style.opacity = isLeaky ? "1" : "0";
-
-      transformSubtitle.textContent = isLeaky
-        ? "All rows"
-        : "Train only";
+      transformSub.textContent  = isLeaky ? "All rows" : "Train only";
 
       if (isLeaky) {
-        pipelineScore.classList.add("danger");
-        pipelineScore.innerHTML = `
-          0.76
-          <small>representative test accuracy</small>
-        `;
-
-        pipelineReadout.innerHTML = `
-          <strong>Leaky workflow:</strong>
-          the feature selector sees every label, including labels from the future test set,
-          before the split takes place.
-        `;
+        pipeScore.classList.add("danger");
+        pipeScore.innerHTML = `0.76<small>representative test accuracy</small>`;
+        pipeReadout.innerHTML = `<strong>Leaky workflow:</strong> the feature selector sees every label, including labels from the future test set, before the split takes place.`;
       } else {
-        pipelineScore.classList.remove("danger");
-        pipelineScore.innerHTML = `
-          0.50
-          <small>expected accuracy on random labels</small>
-        `;
-
-        pipelineReadout.innerHTML = `
-          <strong>Safe workflow:</strong>
-          the selector is fitted on X_train and y_train only. It transforms X_test without
-          learning from the test labels.
-        `;
+        pipeScore.classList.remove("danger");
+        pipeScore.innerHTML = `0.50<small>expected accuracy on random labels</small>`;
+        pipeReadout.innerHTML = `<strong>Safe workflow:</strong> the selector is fitted on X_train and y_train only. It transforms X_test without learning from the test labels.`;
       }
 
       restartParticles();
     }
 
-    leakyModeButton.addEventListener("click", () => {
-      setPipelineMode("leaky");
-    });
-
-    safeModeButton.addEventListener("click", () => {
-      setPipelineMode("safe");
-    });
+    leakyModeBtn.addEventListener("click", () => setPipelineMode("leaky"));
+    safeModeBtn.addEventListener("click",  () => setPipelineMode("safe"));
 
     function createParticle() {
-      const svgNamespace = "http://www.w3.org/2000/svg";
-      const particle = document.createElementNS(svgNamespace, "circle");
-
-      particle.setAttribute("r", "4");
-      particle.setAttribute("cx", "73");
-      particle.setAttribute("cy", "135");
-      particle.setAttribute(
-        "class",
-        currentMode === "leaky" ? "particle danger" : "particle"
-      );
-
-      particleLayer.appendChild(particle);
+      const ns = "http://www.w3.org/2000/svg";
+      const p  = document.createElementNS(ns, "circle");
+      p.setAttribute("r", "4.5");
+      p.setAttribute("cx", "72");
+      p.setAttribute("cy", "135");
+      p.setAttribute("class", currentMode === "leaky" ? "particle danger" : "particle");
+      particleLayer.appendChild(p);
 
       const points = currentMode === "leaky"
-        ? [
-            [73, 135],
-            [282, 135],
-            [497, 135],
-            [712, 135],
-            [877, 135],
-            [712, 135],
-            [497, 75]
-          ]
-        : [
-            [73, 135],
-            [282, 135],
-            [497, 135],
-            [712, 135],
-            [877, 135]
-          ];
+        ? [[72,135],[282,135],[497,135],[712,135],[876,135],[712,135],[497,68]]
+        : [[72,135],[282,135],[497,135],[712,135],[876,135]];
 
-      let segment = 0;
-      const speed = 2.5;
+      let seg = 0;
+      const speed = 2.8;
 
       function move() {
-        if (segment >= points.length - 1) {
-          particle.remove();
-          return;
-        }
+        if (seg >= points.length - 1) { p.remove(); return; }
+        const [x1,y1] = points[seg];
+        const [x2,y2] = points[seg+1];
+        const cx = parseFloat(p.getAttribute("cx"));
+        const cy = parseFloat(p.getAttribute("cy"));
+        const dx = x2 - cx, dy = y2 - cy;
+        const dist = Math.sqrt(dx*dx + dy*dy);
 
-        const [x1, y1] = points[segment];
-        const [x2, y2] = points[segment + 1];
-
-        const x = parseFloat(particle.getAttribute("cx"));
-        const y = parseFloat(particle.getAttribute("cy"));
-
-        const dx = x2 - x;
-        const dy = y2 - y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < speed) {
-          particle.setAttribute("cx", x2);
-          particle.setAttribute("cy", y2);
-          segment++;
+        if (dist < speed) {
+          p.setAttribute("cx", x2);
+          p.setAttribute("cy", y2);
+          seg++;
         } else {
-          particle.setAttribute("cx", x + (dx / distance) * speed);
-          particle.setAttribute("cy", y + (dy / distance) * speed);
+          p.setAttribute("cx", cx + (dx/dist)*speed);
+          p.setAttribute("cy", cy + (dy/dist)*speed);
         }
-
         requestAnimationFrame(move);
       }
-
       requestAnimationFrame(move);
     }
 
     function restartParticles() {
-      if (particleInterval) {
-        clearInterval(particleInterval);
-      }
-
+      if (particleInterval) clearInterval(particleInterval);
       particleLayer.innerHTML = "";
       createParticle();
-      particleInterval = setInterval(createParticle, 850);
+      particleInterval = setInterval(createParticle, 900);
     }
 
     restartParticles();
 
-
-    /* ---------------------------------
-       Code Tabs
-    --------------------------------- */
-
-    const codeTabs = document.querySelectorAll(".code-tab");
-    const codePanels = document.querySelectorAll(".code-panel");
-
-    codeTabs.forEach((tab) => {
+    /* ── CODE TABS ── */
+    document.querySelectorAll(".code-tab").forEach(tab => {
       tab.addEventListener("click", () => {
-        const selectedTab = tab.dataset.tab;
-
-        codeTabs.forEach((item) => {
-          item.classList.toggle("active", item === tab);
-        });
-
-        codePanels.forEach((panel) => {
-          panel.classList.toggle(
-            "active",
-            panel.id === `code-${selectedTab}`
-          );
-        });
+        const sel = tab.dataset.tab;
+        document.querySelectorAll(".code-tab").forEach(t => t.classList.toggle("active", t === tab));
+        document.querySelectorAll(".code-panel").forEach(p => p.classList.toggle("active", p.id === `code-${sel}`));
       });
     });
 
-
-    /* ---------------------------------
-       Copy Code Buttons
-    --------------------------------- */
-
-    const copyButtons = document.querySelectorAll("[data-copy]");
-
-    copyButtons.forEach((button) => {
-      button.addEventListener("click", async () => {
-        const targetId = button.dataset.copy;
-        const target = document.getElementById(targetId);
-
-        if (!target) return;
-
-        const originalText = button.textContent;
-
+    /* ── COPY BUTTONS ── */
+    document.querySelectorAll("[data-copy]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const el = document.getElementById(btn.dataset.copy);
+        if (!el) return;
+        const orig = btn.textContent;
         try {
-          await navigator.clipboard.writeText(target.textContent);
-          button.textContent = "Copied";
-        } catch (error) {
-          button.textContent = "Select manually";
-        }
-
-        setTimeout(() => {
-          button.textContent = originalText;
-        }, 1500);
+          await navigator.clipboard.writeText(el.textContent);
+          btn.textContent = "Copied ✓";
+        } catch { btn.textContent = "Select manually"; }
+        setTimeout(() => { btn.textContent = orig; }, 1600);
       });
     });
 
-
-    /* ---------------------------------
-       Results Animation
-    --------------------------------- */
-
-    const runComparisonButton = document.getElementById("run-comparison");
-    const leakyBar = document.getElementById("leaky-bar");
-    const safeBar = document.getElementById("safe-bar");
-    const leakyValue = document.getElementById("leaky-value");
-    const safeValue = document.getElementById("safe-value");
-
-    function animateNumber(element, start, end, duration) {
-      const startTime = performance.now();
-
-      function update(currentTime) {
-        const progress = Math.min(
-          (currentTime - startTime) / duration,
-          1
-        );
-
-        const easedProgress = 1 - Math.pow(1 - progress, 3);
-        const value = start + (end - start) * easedProgress;
-
-        element.textContent = value.toFixed(2);
-
-        if (progress < 1) {
-          requestAnimationFrame(update);
-        }
-      }
-
-      requestAnimationFrame(update);
+    /* ── RESULTS ANIMATION ── */
+    function animateNumber(el, from, to, duration) {
+      const t0 = performance.now();
+      (function update(now) {
+        const prog = Math.min((now - t0) / duration, 1);
+        const ease = 1 - Math.pow(1 - prog, 3);
+        el.textContent = (from + (to - from) * ease).toFixed(2);
+        if (prog < 1) requestAnimationFrame(update);
+      })(performance.now());
     }
 
-    runComparisonButton.addEventListener("click", () => {
-      leakyBar.style.width = "0%";
-      safeBar.style.width = "0%";
+    document.getElementById("run-comparison").addEventListener("click", () => {
+      const lb = document.getElementById("leaky-bar");
+      const sb = document.getElementById("safe-bar");
+      const lv = document.getElementById("leaky-value");
+      const sv = document.getElementById("safe-value");
 
-      leakyValue.textContent = "0.00";
-      safeValue.textContent = "0.00";
+      lb.style.width = "0%"; sb.style.width = "0%";
+      lv.textContent = "0.00"; sv.textContent = "0.00";
 
       requestAnimationFrame(() => {
-        leakyBar.style.width = "76%";
-        animateNumber(leakyValue, 0, 0.76, 1200);
-
+        lb.style.width = "76%";
+        animateNumber(lv, 0, 0.76, 1300);
         setTimeout(() => {
-          safeBar.style.width = "50%";
-          animateNumber(safeValue, 0, 0.50, 1200);
-        }, 220);
+          sb.style.width = "50%";
+          animateNumber(sv, 0, 0.50, 1300);
+        }, 250);
       });
     });
 
-
-    /* ---------------------------------
-       Expandable Challenge Cards
-    --------------------------------- */
-
-    const patternCards = document.querySelectorAll(".pattern-card");
-
-    patternCards.forEach((card) => {
-      card.addEventListener("click", () => {
-        card.classList.toggle("open");
-      });
+    /* ── PATTERN CARDS ── */
+    document.querySelectorAll(".pattern-card").forEach(card => {
+      card.addEventListener("click", () => card.classList.toggle("open"));
     });
 
-
-    /* ---------------------------------
-       Audit Checklist
-    --------------------------------- */
-
-    const auditInputs = document.querySelectorAll(".audit-item input");
+    /* ── AUDIT CHECKLIST ── */
+    const auditInputs   = document.querySelectorAll(".audit-item input");
     const auditProgress = document.getElementById("audit-progress");
 
-    function updateAuditProgress() {
-      const completed = Array.from(auditInputs)
-        .filter((input) => input.checked)
-        .length;
-
-      auditProgress.textContent = `${completed} / ${auditInputs.length} completed`;
-
-      auditInputs.forEach((input) => {
-        input.closest(".audit-item").classList.toggle(
-          "checked",
-          input.checked
-        );
-      });
+    function updateAudit() {
+      const done = Array.from(auditInputs).filter(i => i.checked).length;
+      auditProgress.textContent = `${done} / ${auditInputs.length} completed`;
+      auditInputs.forEach(i => i.closest(".audit-item").classList.toggle("checked", i.checked));
     }
 
-    auditInputs.forEach((input) => {
-      input.addEventListener("change", updateAuditProgress);
-    });
+    auditInputs.forEach(i => i.addEventListener("change", updateAudit));
 
+    /* ── QUIZ ── */
+    document.querySelectorAll(".quiz-question").forEach(q => {
+      const correct = q.dataset.answer;
+      const result  = q.querySelector(".quiz-result");
+      const buttons = q.querySelectorAll(".quiz-button");
 
-    /* ---------------------------------
-       Audit Quiz
-    --------------------------------- */
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const chosen = btn.dataset.choice;
+          const ok = chosen === correct;
 
-    const quizQuestions = document.querySelectorAll(".quiz-question");
+          result.className = `quiz-result show ${ok ? "correct" : "incorrect"}`;
+          result.textContent = ok
+            ? "✓ Correct"
+            : `✗ Incorrect — expected: ${correct === "yes" ? "Available" : "Not available"}`;
 
-    quizQuestions.forEach((question) => {
-      const correctAnswer = question.dataset.answer;
-      const result = question.querySelector(".quiz-result");
-      const buttons = question.querySelectorAll(".quiz-button");
-
-      buttons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const selectedAnswer = button.dataset.choice;
-          const isCorrect = selectedAnswer === correctAnswer;
-
-          result.className = "quiz-result show";
-          result.classList.add(isCorrect ? "correct" : "incorrect");
-
-          result.textContent = isCorrect
-            ? "Correct"
-            : `Incorrect — expected: ${correctAnswer === "yes" ? "Available" : "Not available"}`;
-
-          buttons.forEach((item) => {
-            item.style.opacity = "0.45";
-          });
-
-          button.style.opacity = "1";
+          buttons.forEach(b => { b.style.opacity = "0.4"; b.style.pointerEvents = "none"; });
+          btn.style.opacity = "1";
         });
       });
     });
