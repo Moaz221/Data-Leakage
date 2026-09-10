@@ -109,6 +109,7 @@
     body {
       min-height: 100vh;
       overflow-x: hidden;
+      padding-top: 70px;
       background: var(--green);
       color: var(--text);
       font-family: var(--body);
@@ -230,8 +231,10 @@
 
     /* ── NAVIGATION ── */
     nav {
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      width: 100%;
       z-index: 100;
       border-bottom: 1px solid var(--line-strong);
       background: rgba(5, 5, 5, 0.92);
@@ -1555,6 +1558,7 @@
     }
 
     @media (max-width: 600px) {
+      body { padding-top: 70px; }
       .container { width: min(100% - 32px, 1160px); }
       .hero { padding-top: 72px; }
       section { padding-top: 72px; }
